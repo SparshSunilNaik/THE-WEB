@@ -65,6 +65,7 @@ export class InvestigationGraph {
       nodeIds.add(node.id)
       for (const caseId of node.caseIds ?? []) {
         if (caseId.trim().length === 0) errors.push(`Node ${node.id} contains an empty case ID`)
+        if (!/^case-[0-9]+$/.test(caseId)) errors.push(`Node ${node.id} references invalid case: ${caseId}`)
       }
     }
     const relationshipIds = new Set<string>()

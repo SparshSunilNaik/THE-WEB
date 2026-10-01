@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -30,15 +30,28 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case002.primaryNodeId)).toBeDefined()
     expect(case002.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case002.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case003.primaryNodeId)).toBeDefined()
+    expect(case003.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case003.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
   })
 
-  it('tracks case membership and finds a traversal from Peter to the Fantastic Four region', () => {
+  it('tracks case membership and finds cosmic traversals', () => {
     expect(graph.getNodesByCase('case-002').map((node) => node.id)).toEqual(expect.arrayContaining(['fantastic-four', 'reed-richards', 'sue-storm', 'ben-grimm', 'baxter-building', 'future-foundation', 'doctor-doom']))
-    expect(graph.getNode('johnny-storm')?.caseIds).toEqual(expect.arrayContaining(['case-001', 'case-002']))
+    expect(graph.getNodesByCase('case-003').map((node) => node.id)).toEqual(expect.arrayContaining(['galactus', 'silver-surfer', 'uatu', 'alicia-masters', 'ultimate-nullifier', 'ff-48', 'ff-49', 'ff-50']))
+    expect(graph.getNode('johnny-storm')?.caseIds).toEqual(expect.arrayContaining(['case-001', 'case-002', 'case-003']))
     expect(graph.getNeighborNodes('peter-parker').map((node) => node.id)).toEqual(expect.arrayContaining(['johnny-storm', 'fantastic-four']))
-    const path = graph.findShortestPath('peter-parker', 'reed-richards')
-    expect(path).not.toBeNull()
-    expect(path).toEqual(expect.arrayContaining(['peter-parker', 'fantastic-four', 'reed-richards']))
+    const peterToGalactus = graph.findShortestPath('peter-parker', 'galactus')
+    expect(peterToGalactus).not.toBeNull()
+    expect(peterToGalactus).toEqual(expect.arrayContaining(['peter-parker', 'johnny-storm', 'galactus']))
+    const peterToSilver = graph.findShortestPath('peter-parker', 'silver-surfer')
+    expect(peterToSilver).not.toBeNull()
+    expect(peterToSilver).toEqual(expect.arrayContaining(['peter-parker', 'silver-surfer']))
+    const aliciaToGalactus = graph.findShortestPath('alicia-masters', 'galactus')
+    expect(aliciaToGalactus).not.toBeNull()
+    expect(aliciaToGalactus).toEqual(expect.arrayContaining(['alicia-masters', 'silver-surfer', 'galactus']))
+    const uatuToNullifier = graph.findShortestPath('uatu', 'ultimate-nullifier')
+    expect(uatuToNullifier).not.toBeNull()
+    expect(uatuToNullifier).toEqual(expect.arrayContaining(['uatu', 'ultimate-nullifier']))
   })
 
   it('detects duplicate and dangling graph references', () => {

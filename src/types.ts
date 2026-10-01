@@ -1,8 +1,8 @@
-export type NodeType = 'character' | 'comic_issue' | 'event' | 'concept' | 'question' | 'note' | 'organization' | 'location'
+export type NodeType = 'character' | 'comic_issue' | 'event' | 'concept' | 'question' | 'note' | 'organization' | 'location' | 'object'
 export type Continuity = 'EARTH-616' | 'MCU' | 'EARTH-96283' | 'EARTH-120703' | 'MULTIVERSAL' | 'META'
 export type VisualVariant = 'dossier' | 'issue' | 'concept' | 'question' | 'note'
 export type RelationshipVisualType = 'major' | 'contextual' | 'evidentiary' | 'hypothesis'
-export type RelationshipType = 'family' | 'formative_influence' | 'origin_evidence' | 'central_principle' | 'ability' | 'thematic_relationship' | 'recurring_motivation' | 'romantic_relationship' | 'causal_event' | 'friendship' | 'continuation' | 'open_question' | 'organization_membership' | 'investigation_branch' | 'attempted_membership' | 'recurring_alliance' | 'founding_member' | 'base_home' | 'related_organization' | 'major_adversary' | 'membership' | 'trusted_ally' | 'legacy' | 'extended_family' | 'rivalry'
+export type RelationshipType = 'family' | 'formative_influence' | 'origin_evidence' | 'central_principle' | 'ability' | 'thematic_relationship' | 'recurring_motivation' | 'romantic_relationship' | 'causal_event' | 'friendship' | 'continuation' | 'open_question' | 'organization_membership' | 'investigation_branch' | 'attempted_membership' | 'recurring_alliance' | 'founding_member' | 'base_home' | 'related_organization' | 'major_adversary' | 'membership' | 'trusted_ally' | 'legacy' | 'extended_family' | 'rivalry' | 'herald' | 'identified_for_consumption' | 'world_consumption_threat' | 'protective_intervention' | 'first_major_confrontation' | 'moral_influence' | 'developing_empathy' | 'rebellion' | 'resistance' | 'mission_intervention' | 'retrieval' | 'deterrent' | 'defender' | 'punishment' | 'watcher_thread' | 'wider_cosmic_lead'
 
 export interface BoardPosition { x: number; y: number; width: number; height: number; rotation: number }
 
