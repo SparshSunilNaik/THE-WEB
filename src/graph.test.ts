@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, nodes, relationships } from './data/evidence'
+import { case001, case002, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -22,11 +22,23 @@ describe('InvestigationGraph', () => {
     expect(graph.getEvidenceSupportingRelationship('norman-gwen').map((node) => node.id)).toEqual(['asm-121', 'asm-122'])
   })
 
-  it('validates the production graph and CASE 001 references', () => {
+  it('validates the production graph and case references', () => {
     expect(graph.validate()).toEqual({ valid: true, errors: [] })
     expect(graph.getNode(case001.primaryNodeId)).toBeDefined()
     expect(case001.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case001.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case002.primaryNodeId)).toBeDefined()
+    expect(case002.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case002.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+  })
+
+  it('tracks case membership and finds a traversal from Peter to the Fantastic Four region', () => {
+    expect(graph.getNodesByCase('case-002').map((node) => node.id)).toEqual(expect.arrayContaining(['fantastic-four', 'reed-richards', 'sue-storm', 'ben-grimm', 'baxter-building', 'future-foundation', 'doctor-doom']))
+    expect(graph.getNode('johnny-storm')?.caseIds).toEqual(expect.arrayContaining(['case-001', 'case-002']))
+    expect(graph.getNeighborNodes('peter-parker').map((node) => node.id)).toEqual(expect.arrayContaining(['johnny-storm', 'fantastic-four']))
+    const path = graph.findShortestPath('peter-parker', 'reed-richards')
+    expect(path).not.toBeNull()
+    expect(path).toEqual(expect.arrayContaining(['peter-parker', 'fantastic-four', 'reed-richards']))
   })
 
   it('detects duplicate and dangling graph references', () => {

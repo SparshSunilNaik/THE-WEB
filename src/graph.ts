@@ -23,14 +23,50 @@ export class InvestigationGraph {
   getDirectlyConnectedEvidence(nodeId: string) { return this.getNeighborNodes(nodeId) }
   getNodesByType(type: NodeType) { return this.nodes.filter((node) => node.type === type) }
   getNodesByContinuity(continuity: Continuity) { return this.nodes.filter((node) => node.continuity === continuity) }
+  getNodesByCase(caseId: string) { return this.nodes.filter((node) => node.caseIds?.includes(caseId)) }
   getEvidenceSupportingRelationship(relationshipId: string) {
     const relationship = this.getRelationship(relationshipId)
     return relationship?.evidenceNodeIds?.map((id) => this.getNode(id)).filter((node): node is InvestigationNode => Boolean(node)) ?? []
   }
+  findShortestPath(startNodeId: string, endNodeId: string) {
+    if (!this.getNode(startNodeId) || !this.getNode(endNodeId)) return null
+    if (startNodeId === endNodeId) return [startNodeId]
+
+    const queue: string[] = [startNodeId]
+    const previous = new Map<string, string | null>([[startNodeId, null]])
+
+    while (queue.length > 0) {
+      const currentId = queue.shift()
+      if (!currentId) continue
+      if (currentId === endNodeId) break
+
+      for (const neighbor of this.getNeighborNodes(currentId)) {
+        if (previous.has(neighbor.id)) continue
+        previous.set(neighbor.id, currentId)
+        queue.push(neighbor.id)
+      }
+    }
+
+    if (!previous.has(endNodeId)) return null
+
+    const path: string[] = []
+    let currentId: string | null = endNodeId
+    while (currentId) {
+      path.unshift(currentId)
+      currentId = previous.get(currentId) ?? null
+    }
+    return path
+  }
   validate(): GraphValidationResult {
     const errors: string[] = []
     const nodeIds = new Set<string>()
-    for (const node of this.nodes) { if (nodeIds.has(node.id)) errors.push(`Duplicate node ID: ${node.id}`); nodeIds.add(node.id) }
+    for (const node of this.nodes) {
+      if (nodeIds.has(node.id)) errors.push(`Duplicate node ID: ${node.id}`)
+      nodeIds.add(node.id)
+      for (const caseId of node.caseIds ?? []) {
+        if (caseId.trim().length === 0) errors.push(`Node ${node.id} contains an empty case ID`)
+      }
+    }
     const relationshipIds = new Set<string>()
     for (const relationship of this.relationships) {
       if (relationshipIds.has(relationship.id)) errors.push(`Duplicate relationship ID: ${relationship.id}`)
