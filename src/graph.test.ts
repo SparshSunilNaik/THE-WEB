@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, case005, case006, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, case006, case007, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -42,6 +42,9 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case006.primaryNodeId)).toBeDefined()
     expect(case006.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case006.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case007.primaryNodeId)).toBeDefined()
+    expect(case007.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case007.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -117,5 +120,22 @@ describe('InvestigationGraph', () => {
     expect(graph.findShortestPath('x-men', 'avengers')).not.toBeNull()
     expect(graph.findShortestPath('magneto', 'fantastic-four')).not.toBeNull()
     expect(graph.getRelationship('spider-xmen-bridge')?.visualType).toBe('hypothesis')
+  })
+
+  it('tracks the magic region and keeps its external routes unresolved', () => {
+    expect(graph.getNodesByCase('case-007').map((node) => node.id)).toEqual(expect.arrayContaining(['doctor-strange', 'ancient-one', 'wong', 'baron-mordo', 'dormammu', 'sanctum-sanctorum', 'dark-dimension', 'magic', 'strange-tales-early']))
+    expect(graph.getNode('doctor-strange')?.continuity).toBe('EARTH-616')
+    expect(graph.getNode('strange-tales-early')?.type).toBe('comic_issue')
+    expect(graph.getRelationship('ancient-one-strange-training')?.type).toBe('mystical_training')
+    expect(graph.getRelationship('dormammu-dark-dimension')?.type).toBe('ruler')
+    expect(graph.getRelationship('doom-magic-bridge')?.visualType).toBe('hypothesis')
+    expect(graph.getRelationship('spider-strange-magic')?.visualType).toBe('hypothesis')
+  })
+
+  it('connects magic through multiple existing Marvel regions', () => {
+    expect(graph.findShortestPath('avengers', 'doctor-strange')).not.toBeNull()
+    expect(graph.findShortestPath('fantastic-four', 'doctor-strange')).not.toBeNull()
+    expect(graph.findShortestPath('peter-parker', 'doctor-strange')).not.toBeNull()
+    expect(graph.findShortestPath('doctor-strange', 'dark-dimension')).not.toBeNull()
   })
 })
