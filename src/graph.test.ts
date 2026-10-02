@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, case005, case006, case007, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, case006, case007, case008, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -45,6 +45,9 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case007.primaryNodeId)).toBeDefined()
     expect(case007.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case007.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case008.primaryNodeId)).toBeDefined()
+    expect(case008.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case008.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -137,5 +140,22 @@ describe('InvestigationGraph', () => {
     expect(graph.findShortestPath('fantastic-four', 'doctor-strange')).not.toBeNull()
     expect(graph.findShortestPath('peter-parker', 'doctor-strange')).not.toBeNull()
     expect(graph.findShortestPath('doctor-strange', 'dark-dimension')).not.toBeNull()
+  })
+
+  it('reuses Thor and Loki and maps the Asgard investigation', () => {
+    expect(graph.getNode('thor')?.caseIds).toEqual(expect.arrayContaining(['case-005', 'case-008']))
+    expect(graph.getNode('loki')?.caseIds).toEqual(expect.arrayContaining(['case-005', 'case-007', 'case-008']))
+    expect(graph.getNodesByCase('case-008').map((node) => node.id)).toEqual(expect.arrayContaining(['thor', 'loki', 'asgard', 'odin', 'mjolnir', 'donald-blake', 'journey-mystery-83']))
+    expect(graph.getNode('journey-mystery-83')?.continuity).toBe('EARTH-616')
+    expect(graph.getRelationship('thor-asgard-home')?.type).toBe('origin_home')
+    expect(graph.getRelationship('thor-galactus-godhood')?.visualType).toBe('hypothesis')
+    expect(graph.getRelationship('asgard-magic-boundary')?.visualType).toBe('hypothesis')
+  })
+
+  it('connects Avengers, Loki, Asgard, and the magic region', () => {
+    expect(graph.findShortestPath('avengers', 'asgard')).not.toBeNull()
+    expect(graph.findShortestPath('loki', 'asgard')).not.toBeNull()
+    expect(graph.findShortestPath('asgard', 'magic')).not.toBeNull()
+    expect(graph.findShortestPath('avengers', 'asgard')).toEqual(expect.arrayContaining(['avengers', 'loki', 'asgard']))
   })
 })
