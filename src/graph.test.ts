@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, case005, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, case006, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -39,6 +39,9 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case005.primaryNodeId)).toBeDefined()
     expect(case005.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case005.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case006.primaryNodeId)).toBeDefined()
+    expect(case006.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case006.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -99,5 +102,20 @@ describe('InvestigationGraph', () => {
     expect(graph.findShortestPath('avengers', 'galactus')).not.toBeNull()
     expect(graph.getRelationship('peter-avengers-lead')?.type).toBe('unresolved_lead')
     expect(graph.getRelationship('peter-avengers-lead')?.visualType).toBe('hypothesis')
+  })
+
+  it('tracks mutantkind evidence and keeps comparisons investigative', () => {
+    expect(graph.getNodesByCase('case-006').map((node) => node.id)).toEqual(expect.arrayContaining(['x-men', 'professor-x', 'magneto', 'xaviers-school', 'mutant', 'x-gene', 'x-men-1', 'giant-size-x-men-1', 'wolverine', 'storm', 'nightcrawler', 'colossus']))
+    expect(graph.getNode('x-men-1')?.continuity).toBe('EARTH-616')
+    expect(graph.getRelationship('mutant-xgene')).toMatchObject({ type: 'mutant_biology', visualType: 'hypothesis' })
+    expect(graph.getRelationship('mutant-external-comparison')).toMatchObject({ type: 'comparison', visualType: 'hypothesis' })
+    expect(graph.getRelationship('magneto-xmen-conflict')?.type).toBe('ideological_conflict')
+  })
+
+  it('connects mutantkind to existing regions without overstating canon', () => {
+    expect(graph.findShortestPath('peter-parker', 'x-men')).not.toBeNull()
+    expect(graph.findShortestPath('x-men', 'avengers')).not.toBeNull()
+    expect(graph.findShortestPath('magneto', 'fantastic-four')).not.toBeNull()
+    expect(graph.getRelationship('spider-xmen-bridge')?.visualType).toBe('hypothesis')
   })
 })
