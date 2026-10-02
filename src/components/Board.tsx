@@ -5,8 +5,8 @@ import type { InvestigationCase, InvestigationNode } from '../types'
 import { ConnectionLayer } from './ConnectionLayer'
 import { EvidenceCard } from './EvidenceCard'
 
-const BOARD_WIDTH = 5200
-const BOARD_HEIGHT = 2200
+const BOARD_WIDTH = 7200
+const BOARD_HEIGHT = 2600
 const CASES_BY_ID = new Map(cases.map((caseItem) => [caseItem.id, caseItem]))
 
 function getHashState() {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -33,6 +33,9 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case003.primaryNodeId)).toBeDefined()
     expect(case003.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case003.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case004.primaryNodeId)).toBeDefined()
+    expect(case004.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case004.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -57,5 +60,24 @@ describe('InvestigationGraph', () => {
   it('detects duplicate and dangling graph references', () => {
     const invalid = new InvestigationGraph([...nodes, nodes[0]], [...relationships, { ...relationships[0], id: 'bad', targetNodeId: 'missing', evidenceNodeIds: ['also-missing'] }])
     expect(invalid.validate().errors).toEqual(expect.arrayContaining(['Duplicate node ID: peter-parker', 'Relationship bad references missing target: missing', 'Relationship bad references missing evidence: also-missing']))
+  })
+
+  it('reuses Uatu and maps the Watcher doctrine without turning inference into canon', () => {
+    expect(graph.getNode('uatu')?.caseIds).toEqual(expect.arrayContaining(['case-003', 'case-004']))
+    expect(graph.getNode('watchers')?.continuity).toBe('EARTH-616')
+    expect(graph.getNode('pros-ilicus')?.caseIds).toContain('case-004')
+    expect(graph.getNode('non-interference')?.type).toBe('concept')
+    expect(graph.getNode('fantastic-four-13')?.type).toBe('comic_issue')
+    expect(graph.getNode('captain-marvel-39')?.type).toBe('comic_issue')
+    expect(graph.getRelationship('responsibility-non-interference')).toMatchObject({ type: 'hypothesis', visualType: 'hypothesis' })
+    expect(graph.getRelationship('uatu-watchers')?.type).toBe('member')
+  })
+
+  it('connects the investigation across the Watcher region', () => {
+    expect(graph.findShortestPath('peter-parker', 'uatu')).not.toBeNull()
+    expect(graph.findShortestPath('peter-parker', 'watchers')).not.toBeNull()
+    expect(graph.findShortestPath('galactus', 'pros-ilicus')).not.toBeNull()
+    expect(graph.findShortestPath('responsibility', 'non-interference')).toEqual(['responsibility', 'non-interference'])
+    expect(graph.findShortestPath('fantastic-four', 'watchers')).not.toBeNull()
   })
 })

@@ -17,10 +17,11 @@ export function EvidenceCard({ item, focused, dimmed, onFocus, onPointerDown }: 
       {item.visualVariant === 'dossier' && <div className="dossier-photo" aria-hidden="true"><span>{item.title.slice(0, 2)}</span></div>}
       <div className="evidence-pin" aria-hidden="true" />
       <div className="evidence-content">
-        <span className="evidence-kind">{item.type === 'character' ? 'PERSON / DOSSIER' : item.type === 'comic_issue' ? 'COMIC EVIDENCE' : item.type === 'concept' ? 'CONCEPT / INDEX' : item.type === 'object' ? 'OBJECT / THREAT' : 'FIELD NOTE'}</span>
+        <span className="evidence-kind">{item.type === 'character' ? 'PERSON / DOSSIER' : item.type === 'comic_issue' ? 'COMIC EVIDENCE' : item.type === 'concept' ? 'CONCEPT / INDEX' : item.type === 'object' ? 'OBJECT / THREAT' : item.type === 'organization' ? 'ORGANIZATION / DOSSIER' : item.type === 'location' ? 'LOCATION / EVIDENCE' : item.type === 'event' ? 'HISTORICAL EVENT' : 'FIELD NOTE'}</span>
         <h2>{item.title}</h2>
         {item.subtitle && <p className="evidence-subtitle">{item.subtitle}</p>}
         {item.summary && <p className="evidence-body">{item.summary}</p>}
+        {item.investigatorNotes && <p className="evidence-investigator">{item.investigatorNotes}</p>}
         {item.meta && <div className="evidence-meta">{item.meta.map((entry) => <span key={entry}>{entry}</span>)}</div>}
       </div>
     </div>
