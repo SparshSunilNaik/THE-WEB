@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, case005, case006, case007, case008, case009, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -51,6 +51,9 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case009.primaryNodeId)).toBeDefined()
     expect(case009.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case009.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case010.primaryNodeId)).toBeDefined()
+    expect(case010.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case010.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -176,5 +179,21 @@ describe('InvestigationGraph', () => {
     expect(graph.findShortestPath('peter-parker', 'punisher')).not.toBeNull()
     expect(graph.getRelationship('kingpin-daredevil')?.type).toBe('adversary')
     expect(graph.getRelationship('peter-kingpin-origin')?.visualType).toBe('major')
+  })
+
+  it('tracks Wakanda through the reused Black Panther and Namor leads', () => {
+    expect(graph.getNode('black-panther')?.caseIds).toEqual(expect.arrayContaining(['case-002', 'case-010']))
+    expect(graph.getNode('namor')?.caseIds).toEqual(expect.arrayContaining(['case-002', 'case-010']))
+    expect(graph.getNodesByCase('case-010').map((node) => node.id)).toEqual(expect.arrayContaining(['black-panther', 'wakanda', 'vibranium', 'wakandan-technology', 'klaw', 'fantastic-four-52']))
+    expect(graph.getNode('fantastic-four-52')?.continuity).toBe('EARTH-616')
+    expect(graph.getRelationship('ff52-wakanda')?.type).toBe('origin_evidence')
+    expect(graph.getRelationship('black-panther-avengers-later')?.visualType).toBe('hypothesis')
+  })
+
+  it('connects Fantastic Four and Avengers to Wakanda without overstating later history', () => {
+    expect(graph.findShortestPath('fantastic-four', 'wakanda')).not.toBeNull()
+    expect(graph.findShortestPath('avengers', 'wakanda')).not.toBeNull()
+    expect(graph.findShortestPath('wakanda', 'namor')).not.toBeNull()
+    expect(graph.findShortestPath('wakanda', 'doctor-doom')).not.toBeNull()
   })
 })
