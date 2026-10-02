@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, case005, case006, case007, case008, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, case006, case007, case008, case009, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -48,6 +48,9 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case008.primaryNodeId)).toBeDefined()
     expect(case008.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case008.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case009.primaryNodeId)).toBeDefined()
+    expect(case009.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case009.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -157,5 +160,21 @@ describe('InvestigationGraph', () => {
     expect(graph.findShortestPath('loki', 'asgard')).not.toBeNull()
     expect(graph.findShortestPath('asgard', 'magic')).not.toBeNull()
     expect(graph.findShortestPath('avengers', 'asgard')).toEqual(expect.arrayContaining(['avengers', 'loki', 'asgard']))
+  })
+
+  it('tracks the street investigation through verified Spider-Man bridges', () => {
+    expect(graph.getNodesByCase('case-009').map((node) => node.id)).toEqual(expect.arrayContaining(['daredevil', 'kingpin', 'punisher', 'luke-cage', 'hells-kitchen', 'street-level', 'daredevil-1', 'asm-50', 'asm-129']))
+    expect(graph.getNode('daredevil-1')?.continuity).toBe('EARTH-616')
+    expect(graph.getRelationship('peter-kingpin-origin')?.type).toBe('crime_origin')
+    expect(graph.getRelationship('peter-punisher-origin')?.type).toBe('crime_origin')
+    expect(graph.getRelationship('punisher-street-level')?.visualType).toBe('hypothesis')
+  })
+
+  it('connects Peter, Kingpin, Daredevil, and Punisher without a fake friendship claim', () => {
+    expect(graph.findShortestPath('peter-parker', 'kingpin')).not.toBeNull()
+    expect(graph.findShortestPath('kingpin', 'daredevil')).not.toBeNull()
+    expect(graph.findShortestPath('peter-parker', 'punisher')).not.toBeNull()
+    expect(graph.getRelationship('kingpin-daredevil')?.type).toBe('adversary')
+    expect(graph.getRelationship('peter-kingpin-origin')?.visualType).toBe('major')
   })
 })
