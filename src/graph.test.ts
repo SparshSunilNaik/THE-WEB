@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -36,6 +36,9 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case004.primaryNodeId)).toBeDefined()
     expect(case004.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case004.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case005.primaryNodeId)).toBeDefined()
+    expect(case005.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case005.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -79,5 +82,22 @@ describe('InvestigationGraph', () => {
     expect(graph.findShortestPath('galactus', 'pros-ilicus')).not.toBeNull()
     expect(graph.findShortestPath('responsibility', 'non-interference')).toEqual(['responsibility', 'non-interference'])
     expect(graph.findShortestPath('fantastic-four', 'watchers')).not.toBeNull()
+  })
+
+  it('tracks Avengers formation evidence and cautious future bridges', () => {
+    expect(graph.getNodesByCase('case-005').map((node) => node.id)).toEqual(expect.arrayContaining(['avengers', 'iron-man', 'thor', 'hulk', 'hank-pym', 'janet-van-dyne', 'loki', 'captain-america', 'avengers-1', 'avengers-4']))
+    expect(graph.getNodesByContinuity('EARTH-616').map((node) => node.id)).toContain('avengers')
+    expect(graph.getRelationship('avengers-1-formation')?.type).toBe('formation_evidence')
+    expect(graph.getRelationship('captain-avengers-membership')?.type).toBe('membership')
+    expect(graph.getRelationship('peter-avengers-lead')?.visualType).toBe('hypothesis')
+    expect(graph.getRelationship('avengers-fantastic-four-network')?.visualType).toBe('hypothesis')
+  })
+
+  it('connects the Earth team investigation without inventing Spider-Man membership', () => {
+    expect(graph.findShortestPath('peter-parker', 'avengers')).not.toBeNull()
+    expect(graph.findShortestPath('avengers', 'fantastic-four')).not.toBeNull()
+    expect(graph.findShortestPath('avengers', 'galactus')).not.toBeNull()
+    expect(graph.getRelationship('peter-avengers-lead')?.type).toBe('unresolved_lead')
+    expect(graph.getRelationship('peter-avengers-lead')?.visualType).toBe('hypothesis')
   })
 })
