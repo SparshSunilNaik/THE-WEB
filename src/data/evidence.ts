@@ -167,9 +167,20 @@ export const nodes: InvestigationNode[] = [
   { id: 'death', type: 'question', title: 'DEATH ?', summary: 'Not a joke. Not a metaphor. A reminder that the cosmic wall is not done with us.', meta: ['UNRESOLVED LEAD'], position: { x: 5400, y: 1760, width: 220, height: 120, rotation: -1.6 }, visualVariant: 'question', tone: 'yellow', tags: ['future-cosmic'], movable: true, caseIds: ['case-003'] },
   { id: 'thanos', type: 'question', title: 'THANOS ?', summary: 'A name encountered while tracking the scale of the problem.', meta: ['UNRESOLVED LEAD'], position: { x: 6020, y: 1730, width: 220, height: 120, rotation: 1.8 }, visualVariant: 'question', tone: 'paper', tags: ['future-cosmic'], movable: true, caseIds: ['case-003'] },
   { id: 'cosmic-more', type: 'note', title: '...there are MORE?', summary: 'The investigation keeps widening beyond the current evidence.', meta: ['MARGIN NOTE / S.N.'], position: { x: 5820, y: 1380, width: 220, height: 110, rotation: 4.2 }, visualVariant: 'note', tone: 'yellow', tags: ['future-cosmic'], movable: true, caseIds: ['case-003'] },
-  { id: 'namor', type: 'question', title: 'NAMOR / ATLANTIS', summary: 'Another direction, not a conclusion.', meta: ['UNRESOLVED LEAD'], position: { x: 4550, y: 1260, width: 260, height: 125, rotation: 1.2 }, visualVariant: 'question', tone: 'paper', tags: ['future-door', 'case-010'], movable: true, caseIds: ['case-002', 'case-010'] },
+  { id: 'namor', type: 'character', title: 'NAMOR', subtitle: 'THE SUB-MARINER', summary: 'A king whose relationship with the surface world is an endless cycle of conflict and reluctant alliance.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'MUTANT / ATLANTEAN', 'SOVEREIGN'], position: { x: 4550, y: 1760, width: 290, height: 210, rotation: 1.2 }, visualVariant: 'dossier', tone: 'blue', tags: ['atlantis', 'case-002', 'case-010', 'case-011'], movable: true, caseIds: ['case-002', 'case-010', 'case-011'] },
   { id: 'black-panther', type: 'character', title: "T'CHALLA", subtitle: 'BLACK PANTHER', summary: 'The Fantastic Four meet a king whose country has been kept outside the usual map.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'WAKANDA / SOVEREIGN'], position: { x: 4210, y: 1360, width: 275, height: 205, rotation: 1.9 }, visualVariant: 'dossier', tone: 'red', tags: ['wakanda', 'case-002', 'case-010'], movable: true, caseIds: ['case-002', 'case-010'] },
   { id: 'franklin-richards', type: 'question', title: 'FRANKLIN RICHARDS', subtitle: 'INVESTIGATE SEPARATELY', summary: 'The thread widens into a family story without being solved here.', meta: ['UNRESOLVED LEAD'], position: { x: 3920, y: 1520, width: 290, height: 130, rotation: -2.3 }, visualVariant: 'question', tone: 'blue', tags: ['future-door'], movable: true, caseIds: ['case-002'] },
+  { id: 'atlantis', type: 'location', title: 'ATLANTIS', subtitle: 'UNDERSEA EMPIRE', summary: 'An advanced, sovereign civilization that existed long before the surface world began paying attention.', continuity: 'EARTH-616', meta: ['EARTH-616', 'NATION / SOVEREIGNTY'], position: { x: 8000, y: 3200, width: 340, height: 230, rotation: -2.1 }, visualVariant: 'dossier', tone: 'blue', tags: ['atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'surface-world', type: 'concept', title: 'THE SURFACE WORLD', summary: 'From the Atlantean perspective: a chaotic, encroaching threat that refuses to stay in its own domain.', meta: ['GEOPOLITICAL BOUNDARY'], position: { x: 6000, y: 2500, width: 280, height: 180, rotation: 1.4 }, visualVariant: 'concept', tone: 'red', tags: ['atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'atlanteans', type: 'concept', title: 'ATLANTEANS', summary: 'A civilization with its own politics, dissidents, and reasons to distrust its ruler’s human half.', meta: ['POPULATION / CULTURE'], position: { x: 8400, y: 3400, width: 270, height: 160, rotation: 2.3 }, visualVariant: 'concept', tone: 'paper', tags: ['atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'fantastic-four-4', type: 'comic_issue', title: 'FANTASTIC FOUR', subtitle: '#4', summary: 'Johnny Storm finds an amnesiac in the Bowery. Fire brings the king of the oceans back into the world.', continuity: 'EARTH-616', meta: ['MAY 1962', 'MODERN RETURN EVIDENCE'], position: { x: 4100, y: 1900, width: 260, height: 185, rotation: -1.8 }, visualVariant: 'issue', tone: 'yellow', tags: ['atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'two-hidden-kingdoms', type: 'question', title: 'Two hidden kingdoms.', summary: 'Very different answers to the surface world.', meta: ['INVESTIGATOR COMPARISON'], position: { x: 13000, y: 2600, width: 310, height: 140, rotation: -3.5 }, visualVariant: 'question', tone: 'cream', tags: ['atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'attuma-lead', type: 'question', title: 'ATTUMA ?', summary: 'Internal Atlantean conflict.', meta: ['UNRESOLVED LEAD'], position: { x: 7700, y: 3500, width: 210, height: 120, rotation: 1.5 }, visualVariant: 'question', tone: 'red', tags: ['future-atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'tiger-shark-lead', type: 'question', title: 'TIGER SHARK ?', summary: 'Surface and ocean merged by science.', meta: ['UNRESOLVED LEAD'], position: { x: 7400, y: 3300, width: 220, height: 120, rotation: -2.2 }, visualVariant: 'question', tone: 'blue', tags: ['future-atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'invaders-lead', type: 'question', title: 'INVADERS ?', summary: 'Namor in WWII. The timeline is deeper than it looks.', meta: ['UNRESOLVED LEAD'], position: { x: 5000, y: 2000, width: 240, height: 130, rotation: 3.1 }, visualVariant: 'question', tone: 'paper', tags: ['future-atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'human-torch-original-lead', type: 'question', title: 'HUMAN TORCH — NOT JOHNNY? ?', summary: 'An android and a king in the Golden Age.', meta: ['UNRESOLVED LEAD'], position: { x: 4200, y: 2200, width: 280, height: 130, rotation: -1.7 }, visualVariant: 'question', tone: 'yellow', tags: ['future-atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'the-deep-lead', type: 'question', title: 'THE DEEP ?', summary: 'What lies further down?', meta: ['UNRESOLVED LEAD'], position: { x: 8100, y: 3600, width: 210, height: 120, rotation: 1.1 }, visualVariant: 'question', tone: 'blue', tags: ['future-atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'atlantis-wakanda-conflict-lead', type: 'question', title: 'ATLANTIS / WAKANDA CONFLICT ?', summary: 'A future devastation waiting to happen.', meta: ['UNRESOLVED LEAD'], position: { x: 13000, y: 2850, width: 280, height: 130, rotation: 2.4 }, visualVariant: 'question', tone: 'red', tags: ['future-atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
 ]
 
 export const relationships: InvestigationRelationship[] = [
@@ -394,6 +405,23 @@ export const relationships: InvestigationRelationship[] = [
   { id: 'wakanda-dora-lead', sourceNodeId: 'wakanda', targetNodeId: 'dora-milaje-lead', type: 'future_lead', label: 'institution ?', visualType: 'hypothesis' },
   { id: 'wakanda-bast-lead', sourceNodeId: 'wakanda', targetNodeId: 'bast-lead', type: 'future_lead', label: 'godhood ?', visualType: 'hypothesis' },
   { id: 'wakanda-vibranium-origin', sourceNodeId: 'vibranium', targetNodeId: 'vibranium-origin-lead', type: 'future_lead', label: 'origin ?', visualType: 'hypothesis' },
+  { id: 'namor-surface-world', sourceNodeId: 'namor', targetNodeId: 'surface-world', type: 'geopolitical_tension', label: 'conflict / sovereign tension', visualType: 'major' },
+  { id: 'atlantis-surface-world', sourceNodeId: 'atlantis', targetNodeId: 'surface-world', type: 'geopolitical_tension', label: 'encroachment / boundary', visualType: 'major' },
+  { id: 'namor-atlantis', sourceNodeId: 'namor', targetNodeId: 'atlantis', type: 'sovereignty', label: 'ruler / homeland', visualType: 'major' },
+  { id: 'namor-atlanteans', sourceNodeId: 'namor', targetNodeId: 'atlanteans', type: 'internal_conflict', label: 'human heritage distrust', visualType: 'hypothesis' },
+  { id: 'atlanteans-atlantis', sourceNodeId: 'atlanteans', targetNodeId: 'atlantis', type: 'population', label: 'citizenship', visualType: 'major' },
+  { id: 'ff4-namor', sourceNodeId: 'fantastic-four-4', targetNodeId: 'namor', type: 'debut_evidence', label: 'modern return', visualType: 'major' },
+  { id: 'johnny-namor', sourceNodeId: 'johnny-storm', targetNodeId: 'namor', type: 'discovery', label: 'rediscovery', visualType: 'major', evidenceNodeIds: ['fantastic-four-4'] },
+  { id: 'sue-namor', sourceNodeId: 'namor', targetNodeId: 'sue-storm', type: 'personal_connection', label: 'restrained respect / complexity', visualType: 'hypothesis' },
+  { id: 'namor-ff', sourceNodeId: 'namor', targetNodeId: 'fantastic-four', type: 'reluctant_alliance', label: 'conflict / alliance', visualType: 'hypothesis' },
+  { id: 'wakanda-atlantis-compare', sourceNodeId: 'wakanda', targetNodeId: 'two-hidden-kingdoms', type: 'investigator_comparison', label: 'sovereignty comparison', visualType: 'hypothesis' },
+  { id: 'atlantis-wakanda-compare', sourceNodeId: 'atlantis', targetNodeId: 'two-hidden-kingdoms', type: 'investigator_comparison', label: 'sovereignty comparison', visualType: 'hypothesis' },
+  { id: 'namor-attuma-lead', sourceNodeId: 'namor', targetNodeId: 'attuma-lead', type: 'internal_conflict', label: 'Attuma ?', visualType: 'hypothesis' },
+  { id: 'namor-tiger-shark-lead', sourceNodeId: 'namor', targetNodeId: 'tiger-shark-lead', type: 'future_lead', label: 'Tiger Shark ?', visualType: 'hypothesis' },
+  { id: 'namor-invaders-lead', sourceNodeId: 'namor', targetNodeId: 'invaders-lead', type: 'future_lead', label: 'Invaders ?', visualType: 'hypothesis' },
+  { id: 'namor-human-torch-lead', sourceNodeId: 'namor', targetNodeId: 'human-torch-original-lead', type: 'future_lead', label: 'original Torch ?', visualType: 'hypothesis' },
+  { id: 'atlantis-deep-lead', sourceNodeId: 'atlantis', targetNodeId: 'the-deep-lead', type: 'future_lead', label: 'the deep ?', visualType: 'hypothesis' },
+  { id: 'two-kingdoms-conflict', sourceNodeId: 'two-hidden-kingdoms', targetNodeId: 'atlantis-wakanda-conflict-lead', type: 'future_lead', label: 'conflict ?', visualType: 'hypothesis' },
 ]
 
 export const case001: InvestigationCase = {
@@ -476,5 +504,28 @@ export const case010: InvestigationCase = {
   initialCamera: { x: -7900, y: -360, scale: 0.45 },
 }
 
-export const cases = [case001, case002, case003, case004, case005, case006, case007, case008, case009, case010]
+
+export const case011: InvestigationCase = {
+  id: 'case-011',
+  title: 'WHO OWNS THE SURFACE?',
+  status: 'OPEN',
+  primaryNodeId: 'namor',
+  relatedNodeIds: [
+    'namor', 'atlantis', 'surface-world', 'atlanteans', 'fantastic-four-4', 'two-hidden-kingdoms',
+    'attuma-lead', 'tiger-shark-lead', 'invaders-lead', 'human-torch-original-lead', 'the-deep-lead', 'atlantis-wakanda-conflict-lead',
+    'fantastic-four', 'johnny-storm', 'sue-storm', 'wakanda'
+  ],
+  keyRelationshipIds: [
+    'namor-surface-world', 'atlantis-surface-world', 'namor-atlantis', 'namor-atlanteans', 'atlanteans-atlantis',
+    'ff4-namor', 'johnny-namor', 'sue-namor', 'namor-ff', 'wakanda-atlantis-compare', 'atlantis-wakanda-compare',
+    'two-kingdoms-conflict'
+  ],
+  questions: [
+    'Why does Namor keep ending up in conflict with the surface world?',
+    'How does a sovereign undersea nation view the land above it?'
+  ],
+  initialCamera: { x: -6500, y: -1500, scale: 0.45 }
+}
+
+export const cases = [case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011]
 export const evidence = nodes

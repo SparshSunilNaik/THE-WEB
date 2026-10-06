@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -54,6 +54,9 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case010.primaryNodeId)).toBeDefined()
     expect(case010.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case010.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case011.primaryNodeId)).toBeDefined()
+    expect(case011.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
+    expect(case011.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -195,5 +198,20 @@ describe('InvestigationGraph', () => {
     expect(graph.findShortestPath('avengers', 'wakanda')).not.toBeNull()
     expect(graph.findShortestPath('wakanda', 'namor')).not.toBeNull()
     expect(graph.findShortestPath('wakanda', 'doctor-doom')).not.toBeNull()
+  })
+
+  it('tracks CASE 011 integrity and reuses Namor/Sue', () => {
+    expect(graph.getNode('namor')?.caseIds).toEqual(expect.arrayContaining(['case-002', 'case-010', 'case-011']))
+    expect(graph.getNodesByCase('case-011').map(n => n.id)).toEqual(expect.arrayContaining(['atlantis', 'namor', 'surface-world', 'fantastic-four-4']))
+    expect(graph.getNode('fantastic-four-4')?.continuity).toBe('EARTH-616')
+    expect(graph.getRelationship('namor-atlantis')?.type).toBe('sovereignty')
+    expect(graph.getRelationship('sue-namor')?.visualType).toBe('hypothesis')
+  })
+
+  it('connects Atlantis through Namor to Wakanda and Fantastic Four', () => {
+    expect(graph.findShortestPath('fantastic-four', 'namor')).not.toBeNull()
+    expect(graph.findShortestPath('namor', 'atlantis')).not.toBeNull()
+    expect(graph.findShortestPath('atlantis', 'wakanda')).not.toBeNull()
+    expect(graph.findShortestPath('peter-parker', 'atlantis')).not.toBeNull()
   })
 })
