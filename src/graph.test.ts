@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, case012, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, case012, case013, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -60,6 +60,9 @@ describe('InvestigationGraph', () => {
     expect(graph.getNode(case012.primaryNodeId)).toBeDefined()
     expect(case012.relatedNodeIds.every((id: string) => graph.getNode(id))).toBe(true)
     expect(case012.keyRelationshipIds.every((id: string) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case013.primaryNodeId)).toBeDefined()
+    expect(case013.relatedNodeIds.every((id: string) => graph.getNode(id))).toBe(true)
+    expect(case013.keyRelationshipIds.every((id: string) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -231,5 +234,59 @@ describe('InvestigationGraph', () => {
     expect(graph.findShortestPath('ultron', 'avengers')).not.toBeNull()
     expect(graph.findShortestPath('ultron', 'vision')).not.toBeNull()
     expect(graph.findShortestPath('vision', 'avengers')).not.toBeNull()
+  })
+
+  it('tracks CASE 013 integrity and reuses Jean Grey, Cyclops, and Galactus without duplicates', () => {
+    expect(graph.getNode('jean-grey')?.caseIds).toEqual(expect.arrayContaining(['case-006', 'case-013']))
+    expect(graph.getNode('cyclops')?.caseIds).toEqual(expect.arrayContaining(['case-006', 'case-013']))
+    expect(graph.getNode('galactus')?.caseIds).toEqual(expect.arrayContaining(['case-003', 'case-013']))
+    expect(graph.getNode('phoenix-force')?.type).toBe('concept')
+    expect(graph.getNode('phoenix-lead')).toBeUndefined()
+    expect(nodes.filter(n => n.id === 'jean-grey').length).toBe(1)
+    expect(nodes.filter(n => n.id.includes('phoenix-lead')).length).toBe(0)
+    expect(graph.getNodesByCase('case-013').map(n => n.id)).toEqual(
+      expect.arrayContaining([
+        'jean-grey', 'phoenix-force', 'dark-phoenix', 'cyclops',
+        'uncanny-x-men-101', 'uncanny-x-men-135', 'uncanny-x-men-137',
+        'fantastic-four-286', 'phoenix-retcon-note', 'cosmic-force-comparison'
+      ])
+    )
+  })
+
+  it('models the retcon distinction between original publication and later continuity', () => {
+    const retconNote = graph.getNode('phoenix-retcon-note')
+    expect(retconNote).toBeDefined()
+    expect(retconNote?.continuity).toBe('META')
+    expect(retconNote?.visualVariant).toBe('note')
+
+    const originalTransformation = graph.getRelationship('jean-phoenix')
+    expect(originalTransformation?.type).toBe('transformation')
+    expect(originalTransformation?.visualType).toBe('major')
+    expect(originalTransformation?.evidenceNodeIds).toContain('uncanny-x-men-101')
+
+    const retconEvidence = graph.getRelationship('ff286-jean')
+    expect(retconEvidence?.type).toBe('retcon_evidence')
+    expect(retconEvidence?.visualType).toBe('major')
+
+    const retconReframing = graph.getRelationship('ff286-phoenix')
+    expect(retconReframing?.type).toBe('retcon_reframing')
+    expect(retconReframing?.visualType).toBe('major')
+
+    const noteToFF = graph.getRelationship('retcon-note-ff286')
+    expect(noteToFF?.visualType).toBe('evidentiary')
+  })
+
+  it('folds Mutantkind and Cosmic Marvel towards each other through Phoenix and investigator comparison', () => {
+    expect(graph.findShortestPath('x-men', 'jean-grey')).not.toBeNull()
+    expect(graph.findShortestPath('jean-grey', 'phoenix-force')).not.toBeNull()
+    expect(graph.findShortestPath('phoenix-force', 'dark-phoenix')).not.toBeNull()
+    expect(graph.findShortestPath('phoenix-force', 'cosmic-force-comparison')).not.toBeNull()
+    expect(graph.findShortestPath('galactus', 'cosmic-force-comparison')).not.toBeNull()
+    expect(graph.findShortestPath('x-men', 'galactus')).not.toBeNull()
+
+    const compRelPhoenix = graph.getRelationship('phoenix-cosmic-compare')
+    expect(compRelPhoenix?.visualType).toBe('hypothesis')
+    const compRelGalactus = graph.getRelationship('galactus-cosmic-compare')
+    expect(compRelGalactus?.visualType).toBe('hypothesis')
   })
 })

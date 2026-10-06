@@ -28,7 +28,7 @@ export const nodes: InvestigationNode[] = [
   { id: 'editorial-note', type: 'note', title: 'Marvel editorial cannot be trusted with Peter Parker.', meta: ['MARGIN NOTE / S.N.'], position: { x: 520, y: 180, width: 245, height: 105, rotation: -5 }, visualVariant: 'note', tone: 'yellow', tags: ['investigator-note'], movable: true, caseIds: ['case-001'] },
   { id: 'follow-fantastic-four', type: 'note', title: 'FOLLOW THIS →', summary: 'Why does this keep leading back to the Fantastic Four?', meta: ['UNFINISHED BRANCH'], position: { x: 2720, y: 1240, width: 280, height: 130, rotation: 3.5 }, visualVariant: 'note', tone: 'yellow', tags: ['unexplored'], movable: true, caseIds: ['case-002'] },
   { id: 'silver-surfer', type: 'character', title: 'SILVER SURFER', subtitle: 'NORRIN RADD', summary: 'His flight is a warning. His choice becomes the first real break in Galactus’s rule.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'HERALD / REBEL'], position: { x: 4240, y: 980, width: 260, height: 190, rotation: -1.1 }, visualVariant: 'dossier', tone: 'blue', tags: ['cosmic', 'case-003'], movable: true, caseIds: ['case-002', 'case-003'] },
-  { id: 'galactus', type: 'character', title: 'GALACTUS', subtitle: 'WORLD-EATER', summary: 'Villain? Force of nature? Something worse? The category keeps failing.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'WORLD-CONSUMPTION THREAT'], position: { x: 5000, y: 650, width: 290, height: 220, rotation: -2.5 }, visualVariant: 'dossier', tone: 'red', tags: ['cosmic', 'case-003'], movable: true, caseIds: ['case-002', 'case-003'] },
+  { id: 'galactus', type: 'character', title: 'GALACTUS', subtitle: 'WORLD-EATER', summary: 'Villain? Force of nature? Something worse? The category keeps failing.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'WORLD-CONSUMPTION THREAT'], position: { x: 5000, y: 650, width: 290, height: 220, rotation: -2.5 }, visualVariant: 'dossier', tone: 'red', tags: ['cosmic', 'case-003', 'case-013'], movable: true, caseIds: ['case-002', 'case-003', 'case-013'] },
   { id: 'uatu', type: 'character', title: 'UATU', subtitle: 'THE WATCHER', summary: 'He knows the rule. He keeps breaking it.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'WATCHER / OBSERVER'], position: { x: 4580, y: 1280, width: 270, height: 190, rotation: 1.3 }, visualVariant: 'dossier', tone: 'paper', tags: ['cosmic', 'case-003', 'case-004'], movable: true, caseIds: ['case-003', 'case-004'] },
   { id: 'alicia-masters', type: 'character', title: 'ALICIA MASTERS', subtitle: 'THE HUMANITY IN THE ROOM', summary: 'Not the explanation. The moral pressure that changes the map.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'HUMANITY / URGENCY'], position: { x: 3640, y: 1030, width: 260, height: 190, rotation: 1.9 }, visualVariant: 'dossier', tone: 'cream', tags: ['cosmic', 'case-003'], movable: true, caseIds: ['case-003'] },
   { id: 'earth', type: 'location', title: 'EARTH', subtitle: 'A WORLD UNDER THREAT', summary: 'The planet that looks like a footnote until it is suddenly a target.', continuity: 'EARTH-616', meta: ['EARTH-616', 'PLANET / STAKE'], position: { x: 4325, y: 400, width: 260, height: 170, rotation: 0.3 }, visualVariant: 'dossier', tone: 'yellow', tags: ['location', 'case-003'], movable: true, caseIds: ['case-003'] },
@@ -78,8 +78,8 @@ export const nodes: InvestigationNode[] = [
   { id: 'xaviers-school', type: 'location', title: "XAVIER'S SCHOOL", subtitle: 'FOR GIFTED YOUNGSTERS', summary: 'The physical place where mutant difference becomes education, discipline, and community.', continuity: 'EARTH-616', meta: ['EARTH-616', 'SCHOOL / HOME'], position: { x: 9250, y: 1050, width: 300, height: 195, rotation: 1.8 }, visualVariant: 'dossier', tone: 'yellow', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
   { id: 'mutant', type: 'concept', title: 'MUTANT', summary: 'Not simply an accident. Not simply a power set. A social category with a biology underneath it.', meta: ['IDENTITY / INVESTIGATION'], position: { x: 9100, y: 620, width: 270, height: 180, rotation: -2.1 }, visualVariant: 'concept', tone: 'cream', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
   { id: 'x-gene', type: 'concept', title: 'X-GENE ?', summary: 'A biological explanation, held here as an investigative model rather than a complete answer.', meta: ['BIOLOGY / HYPOTHESIS'], position: { x: 9300, y: 820, width: 250, height: 165, rotation: 2.4 }, visualVariant: 'concept', tone: 'paper', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
-  { id: 'cyclops', type: 'character', title: 'SCOTT SUMMERS', subtitle: 'CYCLOPS', summary: 'One of Xavier’s original students, learning to make a dangerous difference useful.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'ORIGINAL X-MAN'], position: { x: 9660, y: 1390, width: 255, height: 190, rotation: 1.2 }, visualVariant: 'dossier', tone: 'blue', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
-  { id: 'jean-grey', type: 'character', title: 'JEAN GREY', subtitle: 'MARVEL GIRL', summary: 'An original X-Man whose future questions are larger than this first file.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'ORIGINAL X-MAN'], position: { x: 10000, y: 1450, width: 255, height: 190, rotation: -1.7 }, visualVariant: 'dossier', tone: 'cream', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
+  { id: 'cyclops', type: 'character', title: 'SCOTT SUMMERS', subtitle: 'CYCLOPS', summary: 'One of Xavier’s original students, learning to make a dangerous difference useful.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'ORIGINAL X-MAN'], position: { x: 9660, y: 1390, width: 255, height: 190, rotation: 1.2 }, visualVariant: 'dossier', tone: 'blue', tags: ['mutantkind', 'case-006', 'case-013'], movable: true, caseIds: ['case-006', 'case-013'] },
+  { id: 'jean-grey', type: 'character', title: 'JEAN GREY', subtitle: 'MARVEL GIRL', summary: 'An original X-Man whose future questions are larger than this first file.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'ORIGINAL X-MAN'], position: { x: 10000, y: 1450, width: 255, height: 190, rotation: -1.7 }, visualVariant: 'dossier', tone: 'cream', tags: ['mutantkind', 'case-006', 'case-013'], movable: true, caseIds: ['case-006', 'case-013'] },
   { id: 'beast', type: 'character', title: 'HANK MCCOY', subtitle: 'BEAST', summary: 'The evidence begins with a brilliant original X-Man, not every later transformation.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'ORIGINAL X-MAN'], position: { x: 9300, y: 1510, width: 255, height: 190, rotation: 2.5 }, visualVariant: 'dossier', tone: 'paper', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
   { id: 'angel', type: 'character', title: 'WARREN WORTHINGTON III', subtitle: 'ANGEL', summary: 'An original X-Man whose public identity complicates the question of who gets accepted.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'ORIGINAL X-MAN'], position: { x: 10400, y: 1640, width: 270, height: 190, rotation: -2.2 }, visualVariant: 'dossier', tone: 'yellow', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
   { id: 'iceman', type: 'character', title: 'BOBBY DRAKE', subtitle: 'ICEMAN', summary: 'The youngest original X-Man, evidence that the school is also a recruitment system.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'ORIGINAL X-MAN'], position: { x: 10700, y: 1120, width: 255, height: 190, rotation: 1.8 }, visualVariant: 'dossier', tone: 'blue', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
@@ -90,7 +90,7 @@ export const nodes: InvestigationNode[] = [
   { id: 'storm', type: 'character', title: 'ORORO MUNROE', subtitle: 'STORM', summary: 'A new X-Man who makes the team feel like a society rather than a classroom.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'NEW X-MAN'], position: { x: 11200, y: 1350, width: 270, height: 195, rotation: -1.2 }, visualVariant: 'dossier', tone: 'blue', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
   { id: 'nightcrawler', type: 'character', title: 'KURT WAGNER', subtitle: 'NIGHTCRAWLER', summary: 'Difference made visible, and still part of the team.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'NEW X-MAN'], position: { x: 11200, y: 1710, width: 270, height: 195, rotation: 2.3 }, visualVariant: 'dossier', tone: 'paper', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
   { id: 'colossus', type: 'character', title: 'PIOTR RASPUTIN', subtitle: 'COLOSSUS', summary: 'A new X-Man who extends the school into another country and another life.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'NEW X-MAN'], position: { x: 10900, y: 2650, width: 275, height: 195, rotation: -2.5 }, visualVariant: 'dossier', tone: 'cream', tags: ['mutantkind', 'case-006'], movable: true, caseIds: ['case-006'] },
-  { id: 'phoenix-lead', type: 'question', title: 'PHOENIX ?', summary: 'Jean Grey points toward a future investigation, not a conclusion here.', meta: ['UNRESOLVED LEAD'], position: { x: 10300, y: 1850, width: 220, height: 125, rotation: 2.6 }, visualVariant: 'question', tone: 'red', tags: ['future-mutant', 'case-006'], movable: true, caseIds: ['case-006'] },
+  { id: 'phoenix-force', type: 'concept', title: 'PHOENIX FORCE', subtitle: 'COSMIC ENTITY / PASSION & REBIRTH', summary: 'An immortal nexus of psionic energy drawn to mortal emotion and the capacity for transformation.', continuity: 'EARTH-616', meta: ['EARTH-616', 'COSMIC FORCE', 'LIFE & FIRE INCARNATE'], position: { x: 9700, y: 1950, width: 280, height: 200, rotation: 1.5 }, visualVariant: 'concept', tone: 'red', tags: ['phoenix', 'cosmic', 'mutantkind', 'case-006', 'case-013'], movable: true, caseIds: ['case-006', 'case-013'] },
   { id: 'sentinels-lead', type: 'question', title: 'SENTINELS ?', summary: 'Surveillance and persecution wait at the edge of the question.', meta: ['UNRESOLVED LEAD'], position: { x: 9200, y: 1940, width: 230, height: 125, rotation: -1.8 }, visualVariant: 'question', tone: 'yellow', tags: ['future-mutant', 'case-006'], movable: true, caseIds: ['case-006'] },
   { id: 'genosha-lead', type: 'question', title: 'GENOSHA ?', summary: 'A society-level branch deliberately left unopened.', meta: ['UNRESOLVED LEAD'], position: { x: 9300, y: 2240, width: 220, height: 125, rotation: 1.1 }, visualVariant: 'question', tone: 'blue', tags: ['future-mutant', 'case-006'], movable: true, caseIds: ['case-006'] },
   { id: 'apocalypse-lead', type: 'question', title: 'APOCALYPSE ?', summary: 'An older mutant question, not investigated here.', meta: ['UNRESOLVED LEAD'], position: { x: 11600, y: 2250, width: 230, height: 125, rotation: -2.4 }, visualVariant: 'question', tone: 'red', tags: ['future-mutant', 'case-006'], movable: true, caseIds: ['case-006'] },
@@ -188,6 +188,19 @@ export const nodes: InvestigationNode[] = [
   { id: 'jocasta-lead', type: 'question', title: 'JOCASTA ?', summary: 'Another creation, modeled after Janet Van Dyne.', meta: ['UNRESOLVED LEAD'], position: { x: 6700, y: 2200, width: 220, height: 120, rotation: 2.1 }, visualVariant: 'question', tone: 'paper', tags: ['future-ultron', 'case-012'], movable: true, caseIds: ['case-012'] },
   { id: 'alkhema-lead', type: 'question', title: 'ALKHEMA ?', summary: 'The second bride of Ultron.', meta: ['UNRESOLVED LEAD'], position: { x: 6400, y: 2150, width: 210, height: 120, rotation: -1.7 }, visualVariant: 'question', tone: 'yellow', tags: ['future-ultron', 'case-012'], movable: true, caseIds: ['case-012'] },
   { id: 'annihilation-conquest-lead', type: 'question', title: 'ANNIHILATION: CONQUEST ?', summary: 'Ultron expands from an Earth problem to a cosmic threat.', meta: ['UNRESOLVED LEAD'], position: { x: 6900, y: 2400, width: 270, height: 130, rotation: 1.4 }, visualVariant: 'question', tone: 'red', tags: ['future-ultron', 'case-012'], movable: true, caseIds: ['case-012'] },
+  { id: 'dark-phoenix', type: 'event', title: 'DARK PHOENIX', subtitle: 'CORRUPTION OF OMNIPOTENCE', summary: 'When unlimited cosmic power is filtered through mortal sensory hunger and psychic manipulation, protection collapses into universal consumption.', continuity: 'EARTH-616', meta: ['EARTH-616', 'COSMIC CATASTROPHE', 'CORRUPTION'], position: { x: 9200, y: 2200, width: 280, height: 200, rotation: -2.1 }, visualVariant: 'concept', tone: 'red', tags: ['phoenix', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'uncanny-x-men-101', type: 'comic_issue', title: 'UNCANNY X-MEN', subtitle: '#101', summary: 'Piloting a dying shuttle through cosmic radiation, Jean Grey emerges transformed from Jamaica Bay: "Now and forever — I am Phoenix!"', continuity: 'EARTH-616', meta: ['OCT 1976', 'PHOENIX EMERGENCE EVIDENCE'], position: { x: 10100, y: 1900, width: 265, height: 185, rotation: -1.4 }, visualVariant: 'issue', tone: 'yellow', tags: ['phoenix', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'uncanny-x-men-135', type: 'comic_issue', title: 'UNCANNY X-MEN', subtitle: '#135', summary: 'Dark Phoenix ascends to the cosmos and consumes the D\'Bari star, annihilating an inhabited system and five billion souls.', continuity: 'EARTH-616', meta: ['JUL 1980', 'COSMIC DEVASTATION EVIDENCE'], position: { x: 8900, y: 2450, width: 265, height: 185, rotation: 2.2 }, visualVariant: 'issue', tone: 'red', tags: ['phoenix', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'uncanny-x-men-137', type: 'comic_issue', title: 'UNCANNY X-MEN', subtitle: '#137', summary: '"The Fate of the Phoenix." On the Blue Area of the Moon, trial by combat concludes when Jean chooses suicide to prevent the Dark Phoenix from consuming the universe.', continuity: 'EARTH-616', meta: ['SEP 1980', 'CLIMAX & SACRIFICE EVIDENCE'], position: { x: 9400, y: 2500, width: 270, height: 190, rotation: -1.8 }, visualVariant: 'issue', tone: 'cream', tags: ['phoenix', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'fantastic-four-286', type: 'comic_issue', title: 'FANTASTIC FOUR', subtitle: '#286', summary: 'Reed Richards and the Avengers retrieve a cocoon from Jamaica Bay. Jean Grey is found alive inside—revealing the Phoenix entity had duplicated her while she slept.', continuity: 'EARTH-616', meta: ['JAN 1986', 'RETCON EVIDENCE / SEPARATION'], position: { x: 9900, y: 2350, width: 270, height: 185, rotation: 1.6 }, visualVariant: 'issue', tone: 'yellow', tags: ['phoenix', 'retcon', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'phoenix-retcon-note', type: 'note', title: 'WAIT — WAS THAT ACTUALLY JEAN?', subtitle: 'THE RETCON (1986)', summary: 'Okay. So apparently this got more complicated.', continuity: 'META', meta: ['INVESTIGATOR RED PEN', 'META-CONTINUITY'], position: { x: 10300, y: 2280, width: 250, height: 130, rotation: -3.2 }, visualVariant: 'note', tone: 'red', tags: ['phoenix', 'retcon', 'case-013'], movable: true, caseIds: ['case-013'], investigatorNotes: 'Original publication understanding (1976-1980): Jean Grey herself rose, fell, and died. Later continuity (1986 onwards): The Phoenix Force copied Jean and placed her in stasis. Two layers of truth on the same wall.' },
+  { id: 'cosmic-force-comparison', type: 'question', title: 'What counts as a cosmic force?', summary: 'Galactus consumes worlds to preserve universal equilibrium; the Phoenix burns as life and passion incarnate. Where does power stop being an individual attribute and become universal architecture?', meta: ['INVESTIGATOR COMPARISON'], position: { x: 7400, y: 1550, width: 290, height: 140, rotation: -2.0 }, visualVariant: 'question', tone: 'cream', tags: ['cosmic', 'mutantkind', 'case-003', 'case-013'], movable: true, caseIds: ['case-003', 'case-013'] },
+  { id: 'shiar-lead', type: 'question', title: 'SHI\'AR ?', summary: 'An interstellar empire whose tribunal demanded universal justice for the death of the D\'Bari.', meta: ['UNRESOLVED LEAD', 'COSMIC JURISDICTION'], position: { x: 8550, y: 2600, width: 220, height: 125, rotation: 1.7 }, visualVariant: 'question', tone: 'blue', tags: ['future-phoenix', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'hellfire-club-lead', type: 'question', title: 'HELLFIRE CLUB ?', summary: 'Psychic manipulation and sensory corruption catalyzed the fall into Dark Phoenix.', meta: ['UNRESOLVED LEAD', 'CATALYST'], position: { x: 9100, y: 1900, width: 220, height: 125, rotation: -1.9 }, visualVariant: 'question', tone: 'paper', tags: ['future-phoenix', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'madelyne-pryor-lead', type: 'question', title: 'MADELYNE PRYOR ?', summary: 'A clone, an echo, and the immediate shadow left across Scott Summers\' life.', meta: ['UNRESOLVED LEAD', 'FALLOUT'], position: { x: 10450, y: 2500, width: 220, height: 125, rotation: 2.1 }, visualVariant: 'question', tone: 'cream', tags: ['future-phoenix', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'cable-lead', type: 'question', title: 'CABLE ?', summary: 'A soldier sent into the future, born of the tangled lineage left in Phoenix\'s wake.', meta: ['UNRESOLVED LEAD', 'FUTURE LINEAGE'], position: { x: 10800, y: 2550, width: 210, height: 120, rotation: -2.3 }, visualVariant: 'question', tone: 'blue', tags: ['future-phoenix', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'rachel-summers-lead', type: 'question', title: 'RACHEL SUMMERS ?', summary: 'A daughter from an alternate timeline who inherits the Phoenix mantle with full awareness.', meta: ['UNRESOLVED LEAD', 'ALTERNATE FUTURE'], position: { x: 9900, y: 2750, width: 230, height: 125, rotation: 1.3 }, visualVariant: 'question', tone: 'red', tags: ['future-phoenix', 'case-013'], movable: true, caseIds: ['case-013'] },
+  { id: 'cosmic-entity-lead', type: 'question', title: 'COSMIC ENTITY ?', summary: 'Where does the Phoenix Force rank among the universe’s fundamental principles?', meta: ['UNRESOLVED LEAD', 'COSMIC HIERARCHY'], position: { x: 7900, y: 2000, width: 230, height: 125, rotation: -1.5 }, visualVariant: 'question', tone: 'paper', tags: ['future-cosmic', 'case-013'], movable: true, caseIds: ['case-013'] },
 ]
 
 export const relationships: InvestigationRelationship[] = [
@@ -322,7 +335,7 @@ export const relationships: InvestigationRelationship[] = [
   { id: 'storm-xmen', sourceNodeId: 'storm', targetNodeId: 'x-men', type: 'membership', label: 'new member', visualType: 'major', evidenceNodeIds: ['giant-size-x-men-1'] },
   { id: 'nightcrawler-xmen', sourceNodeId: 'nightcrawler', targetNodeId: 'x-men', type: 'membership', label: 'new member', visualType: 'major', evidenceNodeIds: ['giant-size-x-men-1'] },
   { id: 'colossus-xmen', sourceNodeId: 'colossus', targetNodeId: 'x-men', type: 'membership', label: 'new member', visualType: 'major', evidenceNodeIds: ['giant-size-x-men-1'] },
-  { id: 'jean-phoenix-lead', sourceNodeId: 'jean-grey', targetNodeId: 'phoenix-lead', type: 'unresolved_lead', label: 'Phoenix ?', visualType: 'hypothesis' },
+  { id: 'jean-phoenix', sourceNodeId: 'jean-grey', targetNodeId: 'phoenix-force', type: 'transformation', label: 'manifestation / original presentation', visualType: 'major', evidenceNodeIds: ['uncanny-x-men-101'] },
   { id: 'mutant-sentinels-lead', sourceNodeId: 'mutant', targetNodeId: 'sentinels-lead', type: 'persecution', label: 'surveillance / persecution ?', visualType: 'hypothesis' },
   { id: 'mutant-genosha-lead', sourceNodeId: 'mutant', targetNodeId: 'genosha-lead', type: 'unresolved_lead', label: 'society ?', visualType: 'hypothesis' },
   { id: 'mutant-apocalypse-lead', sourceNodeId: 'mutant', targetNodeId: 'apocalypse-lead', type: 'unresolved_lead', label: 'older mutant question ?', visualType: 'hypothesis' },
@@ -439,6 +452,23 @@ export const relationships: InvestigationRelationship[] = [
   { id: 'ultron-jocasta', sourceNodeId: 'ultron', targetNodeId: 'jocasta-lead', type: 'future_lead', label: 'Jocasta ?', visualType: 'hypothesis' },
   { id: 'ultron-alkhema', sourceNodeId: 'ultron', targetNodeId: 'alkhema-lead', type: 'future_lead', label: 'Alkhema ?', visualType: 'hypothesis' },
   { id: 'ultron-annihilation', sourceNodeId: 'ultron', targetNodeId: 'annihilation-conquest-lead', type: 'future_lead', label: 'cosmic threat ?', visualType: 'hypothesis' },
+  { id: 'cyclops-jean', sourceNodeId: 'cyclops', targetNodeId: 'jean-grey', type: 'personal_connection', label: 'emotional anchor / bond', visualType: 'major' },
+  { id: 'phoenix-dark-phoenix', sourceNodeId: 'phoenix-force', targetNodeId: 'dark-phoenix', type: 'corruption', label: 'corruption / loss of agency', visualType: 'major' },
+  { id: 'ux101-phoenix', sourceNodeId: 'uncanny-x-men-101', targetNodeId: 'phoenix-force', type: 'debut_evidence', label: 'first appearance', visualType: 'evidentiary' },
+  { id: 'ux135-dark-phoenix', sourceNodeId: 'uncanny-x-men-135', targetNodeId: 'dark-phoenix', type: 'annotated_evidence', label: 'D\'Bari devastation evidence', visualType: 'major' },
+  { id: 'ux137-dark-phoenix', sourceNodeId: 'uncanny-x-men-137', targetNodeId: 'dark-phoenix', type: 'climax_sacrifice', label: 'Blue Area trial / Jean sacrifice', visualType: 'major' },
+  { id: 'ff286-jean', sourceNodeId: 'fantastic-four-286', targetNodeId: 'jean-grey', type: 'retcon_evidence', label: 'cocoon discovery / survival', visualType: 'major' },
+  { id: 'ff286-phoenix', sourceNodeId: 'fantastic-four-286', targetNodeId: 'phoenix-force', type: 'retcon_reframing', label: 'revealed as cosmic duplicate', visualType: 'major' },
+  { id: 'retcon-note-ff286', sourceNodeId: 'phoenix-retcon-note', targetNodeId: 'fantastic-four-286', type: 'investigator_comparison', label: 'retcon documentation', visualType: 'evidentiary' },
+  { id: 'retcon-note-jean', sourceNodeId: 'phoenix-retcon-note', targetNodeId: 'jean-grey', type: 'investigator_comparison', label: 'dual continuity reframing', visualType: 'hypothesis' },
+  { id: 'hellfire-dark-phoenix', sourceNodeId: 'hellfire-club-lead', targetNodeId: 'dark-phoenix', type: 'manipulation', label: 'sensory manipulation', visualType: 'hypothesis' },
+  { id: 'dark-phoenix-shiar', sourceNodeId: 'dark-phoenix', targetNodeId: 'shiar-lead', type: 'future_lead', label: 'Shi\'ar retribution ?', visualType: 'hypothesis' },
+  { id: 'cyclops-madelyne', sourceNodeId: 'cyclops', targetNodeId: 'madelyne-pryor-lead', type: 'future_lead', label: 'Madelyne ?', visualType: 'hypothesis' },
+  { id: 'madelyne-cable', sourceNodeId: 'madelyne-pryor-lead', targetNodeId: 'cable-lead', type: 'future_lead', label: 'Cable lineage ?', visualType: 'hypothesis' },
+  { id: 'phoenix-rachel', sourceNodeId: 'phoenix-force', targetNodeId: 'rachel-summers-lead', type: 'future_lead', label: 'Rachel Summers ?', visualType: 'hypothesis' },
+  { id: 'phoenix-cosmic-entity', sourceNodeId: 'phoenix-force', targetNodeId: 'cosmic-entity-lead', type: 'future_lead', label: 'entity hierarchy ?', visualType: 'hypothesis' },
+  { id: 'phoenix-cosmic-compare', sourceNodeId: 'phoenix-force', targetNodeId: 'cosmic-force-comparison', type: 'investigator_comparison', label: 'cosmic force comparison ?', visualType: 'hypothesis' },
+  { id: 'galactus-cosmic-compare', sourceNodeId: 'galactus', targetNodeId: 'cosmic-force-comparison', type: 'investigator_comparison', label: 'cosmic force comparison ?', visualType: 'hypothesis' },
 ]
 
 export const case001: InvestigationCase = {
@@ -483,7 +513,7 @@ export const case005: InvestigationCase = {
 
 export const case006: InvestigationCase = {
   id: 'case-006', title: 'WHY ARE MUTANTS DIFFERENT?', status: 'OPEN', primaryNodeId: 'x-men',
-  relatedNodeIds: ['professor-x', 'magneto', 'x-men', 'xaviers-school', 'mutant', 'x-gene', 'cyclops', 'jean-grey', 'beast', 'angel', 'iceman', 'x-men-1', 'same-problem', 'giant-size-x-men-1', 'wolverine', 'storm', 'nightcrawler', 'colossus', 'phoenix-lead', 'sentinels-lead', 'genosha-lead', 'apocalypse-lead', 'scarlet-witch-lead', 'days-future-lead', 'spider-man-xmen-lead', 'avengers', 'hulk'],
+  relatedNodeIds: ['professor-x', 'magneto', 'x-men', 'xaviers-school', 'mutant', 'x-gene', 'cyclops', 'jean-grey', 'beast', 'angel', 'iceman', 'x-men-1', 'same-problem', 'giant-size-x-men-1', 'wolverine', 'storm', 'nightcrawler', 'colossus', 'phoenix-force', 'sentinels-lead', 'genosha-lead', 'apocalypse-lead', 'scarlet-witch-lead', 'days-future-lead', 'spider-man-xmen-lead', 'avengers', 'hulk'],
   keyRelationshipIds: ['xavier-xmen-school', 'school-xmen', 'magneto-xmen-conflict', 'xmen-mutant-identity', 'mutant-xgene', 'xmen-1-evidence', 'xavier-xmen-founder', 'xmen1-magneto', 'giant-size-xmen-expansion', 'wolverine-xmen', 'storm-xmen', 'nightcrawler-xmen', 'colossus-xmen'],
   questions: ['Why does Marvel treat mutant identity as socially and politically distinct?', 'Same problem. Very different answers.'],
   initialCamera: { x: -4150, y: -250, scale: 0.45 },
@@ -566,5 +596,52 @@ export const case012: InvestigationCase = {
   initialCamera: { x: -6200, y: -1300, scale: 0.55 }
 }
 
-export const cases = [case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, case012]
+export const case013: InvestigationCase = {
+  id: 'case-013',
+  title: 'WHEN DOES POWER STOP BEING YOURS?',
+  status: 'OPEN',
+  primaryNodeId: 'jean-grey',
+  relatedNodeIds: [
+    'jean-grey',
+    'phoenix-force',
+    'dark-phoenix',
+    'cyclops',
+    'uncanny-x-men-101',
+    'uncanny-x-men-135',
+    'uncanny-x-men-137',
+    'fantastic-four-286',
+    'phoenix-retcon-note',
+    'cosmic-force-comparison',
+    'shiar-lead',
+    'hellfire-club-lead',
+    'madelyne-pryor-lead',
+    'cable-lead',
+    'rachel-summers-lead',
+    'cosmic-entity-lead',
+    'galactus'
+  ],
+  keyRelationshipIds: [
+    'jean-phoenix',
+    'cyclops-jean',
+    'phoenix-dark-phoenix',
+    'ux101-phoenix',
+    'ux135-dark-phoenix',
+    'ux137-dark-phoenix',
+    'ff286-jean',
+    'ff286-phoenix',
+    'retcon-note-ff286',
+    'retcon-note-jean',
+    'hellfire-dark-phoenix',
+    'dark-phoenix-shiar',
+    'phoenix-cosmic-compare',
+    'galactus-cosmic-compare'
+  ],
+  questions: [
+    'When does extraordinary power stop being something a person has and start becoming something that has them?',
+    'How does continuity handle the fact that Marvel changed what happened to Jean Grey?'
+  ],
+  initialCamera: { x: -4300, y: -550, scale: 0.5 }
+}
+
+export const cases = [case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, case012, case013]
 export const evidence = nodes
