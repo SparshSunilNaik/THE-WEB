@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, case012, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
 
 describe('InvestigationGraph', () => {
@@ -55,8 +55,11 @@ describe('InvestigationGraph', () => {
     expect(case010.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
     expect(case010.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
     expect(graph.getNode(case011.primaryNodeId)).toBeDefined()
-    expect(case011.relatedNodeIds.every((id) => graph.getNode(id))).toBe(true)
-    expect(case011.keyRelationshipIds.every((id) => graph.getRelationship(id))).toBe(true)
+    expect(case011.relatedNodeIds.every((id: string) => graph.getNode(id))).toBe(true)
+    expect(case011.keyRelationshipIds.every((id: string) => graph.getRelationship(id))).toBe(true)
+    expect(graph.getNode(case012.primaryNodeId)).toBeDefined()
+    expect(case012.relatedNodeIds.every((id: string) => graph.getNode(id))).toBe(true)
+    expect(case012.keyRelationshipIds.every((id: string) => graph.getRelationship(id))).toBe(true)
   })
 
   it('tracks case membership and finds cosmic traversals', () => {
@@ -213,5 +216,20 @@ describe('InvestigationGraph', () => {
     expect(graph.findShortestPath('namor', 'atlantis')).not.toBeNull()
     expect(graph.findShortestPath('atlantis', 'wakanda')).not.toBeNull()
     expect(graph.findShortestPath('peter-parker', 'atlantis')).not.toBeNull()
+  })
+
+  it('tracks CASE 012 integrity and reuses Hank Pym/Avengers', () => {
+    expect(graph.getNode('hank-pym')?.caseIds).toEqual(expect.arrayContaining(['case-005', 'case-012']))
+    expect(graph.getNode('ultron')?.type).toBe('character')
+    expect(graph.getNodesByCase('case-012').map(n => n.id)).toEqual(expect.arrayContaining(['ultron', 'hank-pym', 'vision', 'avengers-54', 'creator-guilt']))
+    expect(graph.getRelationship('pym-ultron')?.type).toBe('creation')
+    expect(graph.getRelationship('ultron-avengers')?.visualType).toBe('major')
+  })
+
+  it('connects Ultron to Avengers network without drifting into empty space', () => {
+    expect(graph.findShortestPath('hank-pym', 'ultron')).not.toBeNull()
+    expect(graph.findShortestPath('ultron', 'avengers')).not.toBeNull()
+    expect(graph.findShortestPath('ultron', 'vision')).not.toBeNull()
+    expect(graph.findShortestPath('vision', 'avengers')).not.toBeNull()
   })
 })

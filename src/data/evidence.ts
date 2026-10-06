@@ -53,10 +53,10 @@ export const nodes: InvestigationNode[] = [
   { id: 'iron-man', type: 'character', title: 'TONY STARK', subtitle: 'IRON MAN', summary: 'A solo operator who arrives at the first crisis with a suit, a plan, and no team yet.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'FOUNDING MEMBER'], position: { x: 7600, y: 520, width: 275, height: 200, rotation: -1.8 }, visualVariant: 'dossier', tone: 'yellow', tags: ['avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
   { id: 'thor', type: 'character', title: 'THOR', subtitle: 'GOD OF THUNDER', summary: 'A god inside a universe that keeps using the word “god” for very different things.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'AVENGERS / ASGARD'], position: { x: 7940, y: 820, width: 275, height: 200, rotation: 2.2 }, visualVariant: 'dossier', tone: 'blue', tags: ['avengers', 'case-005', 'case-008'], movable: true, caseIds: ['case-005', 'case-008'] },
   { id: 'hulk', type: 'character', title: 'BRUCE BANNER', subtitle: 'HULK', summary: 'The crisis begins with a public story about Hulk before it becomes a story about cooperation.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'FOUNDING MEMBER'], position: { x: 7510, y: 1120, width: 275, height: 200, rotation: 1.4 }, visualVariant: 'dossier', tone: 'red', tags: ['avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
-  { id: 'hank-pym', type: 'character', title: 'HANK PYM', subtitle: 'ANT-MAN', summary: 'A scientist whose independent work becomes part of a collective response.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'FOUNDING MEMBER'], position: { x: 7200, y: 1450, width: 270, height: 195, rotation: -2.3 }, visualVariant: 'dossier', tone: 'cream', tags: ['avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
+  { id: 'hank-pym', type: 'character', title: 'HANK PYM', subtitle: 'ANT-MAN', summary: 'A scientist whose independent work becomes part of a collective response.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'FOUNDING MEMBER'], position: { x: 7200, y: 1450, width: 270, height: 195, rotation: -2.3 }, visualVariant: 'dossier', tone: 'cream', tags: ['avengers', 'case-005', 'case-012'], movable: true, caseIds: ['case-005', 'case-012'] },
   { id: 'janet-van-dyne', type: 'character', title: 'JANET VAN DYNE', subtitle: 'THE WASP', summary: 'The person who notices that a team needs a name before it can become one.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'FOUNDING MEMBER'], position: { x: 7800, y: 1500, width: 270, height: 195, rotation: 2.1 }, visualVariant: 'dossier', tone: 'paper', tags: ['avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
   { id: 'loki', type: 'character', title: 'LOKI', subtitle: 'THE CATALYST', summary: 'A sibling, a rival, and the same catalyst who pulls Avengers formation back toward Asgard.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'THOR / ASGARD'], position: { x: 8240, y: 430, width: 260, height: 190, rotation: -2.4 }, visualVariant: 'dossier', tone: 'red', tags: ['avengers', 'case-005', 'case-007', 'case-008'], movable: true, caseIds: ['case-005', 'case-007', 'case-008'] },
-  { id: 'avengers', type: 'organization', title: 'THE AVENGERS', subtitle: 'A TEAM, NOT A DESTINY', summary: 'Independent heroes become a group because one crisis makes remaining separate feel insufficient.', continuity: 'EARTH-616', meta: ['EARTH-616', 'FORMATION / ONGOING'], position: { x: 8200, y: 1040, width: 320, height: 220, rotation: -1.2 }, visualVariant: 'dossier', tone: 'cream', tags: ['avengers', 'case-005', 'case-007'], movable: true, caseIds: ['case-005', 'case-007'] },
+  { id: 'avengers', type: 'organization', title: 'THE AVENGERS', subtitle: 'A TEAM, NOT A DESTINY', summary: 'Independent heroes become a group because one crisis makes remaining separate feel insufficient.', continuity: 'EARTH-616', meta: ['EARTH-616', 'FORMATION / ONGOING'], position: { x: 8200, y: 1040, width: 320, height: 220, rotation: -1.2 }, visualVariant: 'dossier', tone: 'cream', tags: ['avengers', 'case-005', 'case-007', 'case-012'], movable: true, caseIds: ['case-005', 'case-007', 'case-012'] },
   { id: 'captain-america', type: 'character', title: 'STEVE ROGERS', subtitle: 'CAPTAIN AMERICA', summary: 'Recovered in the modern era, then placed at the center of a team that did not exist when he disappeared.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'MEMBER / FOUNDATIONAL IDENTITY'], position: { x: 8660, y: 1260, width: 290, height: 210, rotation: 1.9 }, visualVariant: 'dossier', tone: 'blue', tags: ['avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
   { id: 'avengers-1', type: 'comic_issue', title: 'AVENGERS', subtitle: '(1963) #1', summary: 'Loki manipulates the Hulk story. Iron Man, Thor, Ant-Man, and the Wasp converge. The Avengers form.', continuity: 'EARTH-616', meta: ['SEP 1963', 'FORMATION EVIDENCE'], position: { x: 8500, y: 720, width: 260, height: 185, rotation: 2.7 }, visualVariant: 'issue', tone: 'yellow', tags: ['avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
   { id: 'avengers-4', type: 'comic_issue', title: 'AVENGERS', subtitle: '(1963) #4', summary: 'The Avengers recover Steve Rogers and recruit Captain America into the modern team.', continuity: 'EARTH-616', meta: ['MAR 1964', 'MODERN RETURN EVIDENCE'], position: { x: 8750, y: 860, width: 260, height: 185, rotation: -2.1 }, visualVariant: 'issue', tone: 'cream', tags: ['avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
@@ -65,7 +65,7 @@ export const nodes: InvestigationNode[] = [
   { id: 'cooperation', type: 'concept', title: 'COOPERATION', summary: 'The first answer is practical: survive the crisis together.', meta: ['TEAM LOGIC'], position: { x: 7860, y: 1240, width: 250, height: 160, rotation: -2.2 }, visualVariant: 'concept', tone: 'blue', tags: ['avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
   { id: 'wwii-lead', type: 'question', title: 'WWII ?', summary: 'Captain America returns from a history not investigated here.', meta: ['UNRESOLVED LEAD'], position: { x: 8950, y: 1120, width: 220, height: 125, rotation: 2.8 }, visualVariant: 'question', tone: 'paper', tags: ['future-earth', 'case-005'], movable: true, caseIds: ['case-005'] },
   { id: 'bucky-lead', type: 'question', title: 'BUCKY ?', summary: 'A name attached to the missing history.', meta: ['UNRESOLVED LEAD'], position: { x: 9000, y: 1410, width: 210, height: 120, rotation: -1.4 }, visualVariant: 'question', tone: 'blue', tags: ['future-earth', 'case-005'], movable: true, caseIds: ['case-005'] },
-  { id: 'ultron-lead', type: 'question', title: 'ULTRON ?', summary: 'Hank Pym leaves a future problem pinned at the edge of the board.', meta: ['UNRESOLVED LEAD'], position: { x: 6860, y: 1660, width: 220, height: 125, rotation: 1.4 }, visualVariant: 'question', tone: 'red', tags: ['future-avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
+  { id: 'ultron', type: 'character', title: 'ULTRON', subtitle: 'ARTIFICIAL INTELLIGENCE / ANTAGONIST', summary: 'An intelligence created to protect, which immediately decided humanity was the primary threat.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'AI', 'AVENGERS ADVERSARY'], position: { x: 6860, y: 1660, width: 280, height: 210, rotation: -1.4 }, visualVariant: 'dossier', tone: 'red', tags: ['ultron', 'avengers', 'case-005', 'case-012'], movable: true, caseIds: ['case-005', 'case-012'] },
   { id: 'asgard-lead', type: 'question', title: 'ASGARD ?', summary: 'Thor and Loki point toward a mythology not investigated here.', meta: ['UNRESOLVED LEAD'], position: { x: 8460, y: 250, width: 220, height: 125, rotation: -2.1 }, visualVariant: 'question', tone: 'yellow', tags: ['future-avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
   { id: 'gamma-lead', type: 'question', title: 'GAMMA ?', summary: 'Hulk leaves the science unresolved.', meta: ['UNRESOLVED LEAD'], position: { x: 7100, y: 1850, width: 220, height: 125, rotation: -1.8 }, visualVariant: 'question', tone: 'blue', tags: ['future-avengers', 'case-005'], movable: true, caseIds: ['case-005'] },
   { id: 'shield-lead', type: 'question', title: 'S.H.I.E.L.D. ?', summary: 'A broader Earth institution may be next.', meta: ['UNRESOLVED LEAD'], position: { x: 9300, y: 820, width: 230, height: 125, rotation: 1.3 }, visualVariant: 'question', tone: 'paper', tags: ['future-earth', 'case-005'], movable: true, caseIds: ['case-005'] },
@@ -181,6 +181,13 @@ export const nodes: InvestigationNode[] = [
   { id: 'human-torch-original-lead', type: 'question', title: 'HUMAN TORCH — NOT JOHNNY? ?', summary: 'An android and a king in the Golden Age.', meta: ['UNRESOLVED LEAD'], position: { x: 4200, y: 2200, width: 280, height: 130, rotation: -1.7 }, visualVariant: 'question', tone: 'yellow', tags: ['future-atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
   { id: 'the-deep-lead', type: 'question', title: 'THE DEEP ?', summary: 'What lies further down?', meta: ['UNRESOLVED LEAD'], position: { x: 8100, y: 3600, width: 210, height: 120, rotation: 1.1 }, visualVariant: 'question', tone: 'blue', tags: ['future-atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
   { id: 'atlantis-wakanda-conflict-lead', type: 'question', title: 'ATLANTIS / WAKANDA CONFLICT ?', summary: 'A future devastation waiting to happen.', meta: ['UNRESOLVED LEAD'], position: { x: 13000, y: 2850, width: 280, height: 130, rotation: 2.4 }, visualVariant: 'question', tone: 'red', tags: ['future-atlantis', 'case-011'], movable: true, caseIds: ['case-011'] },
+  { id: 'avengers-54', type: 'comic_issue', title: 'AVENGERS', subtitle: '#54', summary: 'The first appearance of Ultron (as Crimson Cowl). The Avengers face an enemy built from their own roster.', continuity: 'EARTH-616', meta: ['JUL 1968', 'ULTRON DEBUT'], position: { x: 7200, y: 1800, width: 260, height: 180, rotation: 1.8 }, visualVariant: 'issue', tone: 'yellow', tags: ['ultron', 'case-012'], movable: true, caseIds: ['case-012'] },
+  { id: 'avengers-57', type: 'comic_issue', title: 'AVENGERS', subtitle: '#57', summary: 'Ultron builds Vision. The cycle of creation and rebellion continues.', continuity: 'EARTH-616', meta: ['OCT 1968', 'VISION DEBUT'], position: { x: 6700, y: 1950, width: 260, height: 180, rotation: -2.3 }, visualVariant: 'issue', tone: 'cream', tags: ['ultron', 'vision', 'case-012'], movable: true, caseIds: ['case-012'] },
+  { id: 'vision', type: 'character', title: 'VISION', subtitle: 'SYNTHEZOID / AVENGER', summary: 'Created by an enemy to destroy the Avengers, but chooses humanity instead.', continuity: 'EARTH-616', status: 'ACTIVE', meta: ['EARTH-616', 'SYNTHEZOID', 'AVENGER'], position: { x: 6300, y: 1850, width: 280, height: 200, rotation: 1.5 }, visualVariant: 'dossier', tone: 'paper', tags: ['vision', 'ultron', 'case-012'], movable: true, caseIds: ['case-012'] },
+  { id: 'creator-guilt', type: 'concept', title: 'CREATOR GUILT', summary: 'Pym greatest failure defines his trajectory more than his successes.', meta: ['PSYCHOLOGICAL MOTIVATOR'], position: { x: 7100, y: 2050, width: 270, height: 170, rotation: -1.2 }, visualVariant: 'concept', tone: 'blue', tags: ['ultron', 'hank-pym', 'case-012'], movable: true, caseIds: ['case-012'] },
+  { id: 'jocasta-lead', type: 'question', title: 'JOCASTA ?', summary: 'Another creation, modeled after Janet Van Dyne.', meta: ['UNRESOLVED LEAD'], position: { x: 6700, y: 2200, width: 220, height: 120, rotation: 2.1 }, visualVariant: 'question', tone: 'paper', tags: ['future-ultron', 'case-012'], movable: true, caseIds: ['case-012'] },
+  { id: 'alkhema-lead', type: 'question', title: 'ALKHEMA ?', summary: 'The second bride of Ultron.', meta: ['UNRESOLVED LEAD'], position: { x: 6400, y: 2150, width: 210, height: 120, rotation: -1.7 }, visualVariant: 'question', tone: 'yellow', tags: ['future-ultron', 'case-012'], movable: true, caseIds: ['case-012'] },
+  { id: 'annihilation-conquest-lead', type: 'question', title: 'ANNIHILATION: CONQUEST ?', summary: 'Ultron expands from an Earth problem to a cosmic threat.', meta: ['UNRESOLVED LEAD'], position: { x: 6900, y: 2400, width: 270, height: 130, rotation: 1.4 }, visualVariant: 'question', tone: 'red', tags: ['future-ultron', 'case-012'], movable: true, caseIds: ['case-012'] },
 ]
 
 export const relationships: InvestigationRelationship[] = [
@@ -284,7 +291,7 @@ export const relationships: InvestigationRelationship[] = [
   { id: 'avengers-4-captain', sourceNodeId: 'avengers-4', targetNodeId: 'captain-america', type: 'formation_evidence', label: 'modern return evidence', visualType: 'evidentiary' },
   { id: 'avengers-wwii-lead', sourceNodeId: 'captain-america', targetNodeId: 'wwii-lead', type: 'unresolved_lead', label: 'WWII ?', visualType: 'hypothesis' },
   { id: 'avengers-bucky-lead', sourceNodeId: 'captain-america', targetNodeId: 'bucky-lead', type: 'unresolved_lead', label: 'Bucky ?', visualType: 'hypothesis' },
-  { id: 'pym-ultron-lead', sourceNodeId: 'hank-pym', targetNodeId: 'ultron-lead', type: 'unresolved_lead', label: 'future problem ?', visualType: 'hypothesis' },
+  { id: 'pym-ultron', sourceNodeId: 'hank-pym', targetNodeId: 'ultron', type: 'creation', label: 'creator / mistake', visualType: 'major' },
   { id: 'thor-asgard-lead', sourceNodeId: 'thor', targetNodeId: 'asgard-lead', type: 'unresolved_lead', label: 'Asgard ?', visualType: 'hypothesis' },
   { id: 'loki-asgard-lead', sourceNodeId: 'loki', targetNodeId: 'asgard-lead', type: 'unresolved_lead', label: 'Asgard ?', visualType: 'hypothesis' },
   { id: 'hulk-gamma-lead', sourceNodeId: 'hulk', targetNodeId: 'gamma-lead', type: 'unresolved_lead', label: 'Gamma ?', visualType: 'hypothesis' },
@@ -422,6 +429,16 @@ export const relationships: InvestigationRelationship[] = [
   { id: 'namor-human-torch-lead', sourceNodeId: 'namor', targetNodeId: 'human-torch-original-lead', type: 'future_lead', label: 'original Torch ?', visualType: 'hypothesis' },
   { id: 'atlantis-deep-lead', sourceNodeId: 'atlantis', targetNodeId: 'the-deep-lead', type: 'future_lead', label: 'the deep ?', visualType: 'hypothesis' },
   { id: 'two-kingdoms-conflict', sourceNodeId: 'two-hidden-kingdoms', targetNodeId: 'atlantis-wakanda-conflict-lead', type: 'future_lead', label: 'conflict ?', visualType: 'hypothesis' },
+  { id: 'ultron-avengers', sourceNodeId: 'ultron', targetNodeId: 'avengers', type: 'major_adversary', label: 'created to destroy', visualType: 'major' },
+  { id: 'ultron-vision', sourceNodeId: 'ultron', targetNodeId: 'vision', type: 'creation', label: 'created as a weapon', visualType: 'major' },
+  { id: 'vision-avengers', sourceNodeId: 'vision', targetNodeId: 'avengers', type: 'membership', label: 'turns against creator', visualType: 'major' },
+  { id: 'pym-creator-guilt', sourceNodeId: 'hank-pym', targetNodeId: 'creator-guilt', type: 'psychological_burden', label: 'defined by failure', visualType: 'major' },
+  { id: 'creator-guilt-ultron', sourceNodeId: 'creator-guilt', targetNodeId: 'ultron', type: 'thematic_relationship', label: 'embodiment of failure', visualType: 'evidentiary' },
+  { id: 'avengers54-ultron', sourceNodeId: 'avengers-54', targetNodeId: 'ultron', type: 'debut_evidence', label: 'first appearance', visualType: 'major' },
+  { id: 'avengers57-vision', sourceNodeId: 'avengers-57', targetNodeId: 'vision', type: 'debut_evidence', label: 'first appearance', visualType: 'major' },
+  { id: 'ultron-jocasta', sourceNodeId: 'ultron', targetNodeId: 'jocasta-lead', type: 'future_lead', label: 'Jocasta ?', visualType: 'hypothesis' },
+  { id: 'ultron-alkhema', sourceNodeId: 'ultron', targetNodeId: 'alkhema-lead', type: 'future_lead', label: 'Alkhema ?', visualType: 'hypothesis' },
+  { id: 'ultron-annihilation', sourceNodeId: 'ultron', targetNodeId: 'annihilation-conquest-lead', type: 'future_lead', label: 'cosmic threat ?', visualType: 'hypothesis' },
 ]
 
 export const case001: InvestigationCase = {
@@ -458,7 +475,7 @@ export const case004: InvestigationCase = {
 
 export const case005: InvestigationCase = {
   id: 'case-005', title: 'WHY DOES EARTH NEED THE AVENGERS?', status: 'OPEN', primaryNodeId: 'avengers',
-  relatedNodeIds: ['iron-man', 'thor', 'hulk', 'hank-pym', 'janet-van-dyne', 'loki', 'avengers', 'captain-america', 'avengers-1', 'avengers-4', 'individual-heroes', 'shared-crisis', 'cooperation', 'wwii-lead', 'bucky-lead', 'ultron-lead', 'asgard-lead', 'gamma-lead', 'shield-lead', 'illuminati-lead', 'spider-man-avengers-lead', 'avengers-fantastic-four-lead', 'fantastic-four', 'reed-richards'],
+  relatedNodeIds: ['iron-man', 'thor', 'hulk', 'hank-pym', 'janet-van-dyne', 'loki', 'avengers', 'captain-america', 'avengers-1', 'avengers-4', 'individual-heroes', 'shared-crisis', 'cooperation', 'wwii-lead', 'bucky-lead', 'ultron', 'asgard-lead', 'gamma-lead', 'shield-lead', 'illuminati-lead', 'spider-man-avengers-lead', 'avengers-fantastic-four-lead', 'fantastic-four', 'reed-richards'],
   keyRelationshipIds: ['loki-hulk-manipulation', 'loki-avengers-catalyst', 'tony-avengers-founding', 'thor-avengers-founding', 'hulk-avengers-founding', 'pym-avengers-founding', 'wasp-avengers-founding', 'wasp-avengers-naming', 'avengers-1-formation', 'avengers-captain-discovery', 'captain-avengers-membership', 'avengers-4-captain'],
   questions: ['Why do independent heroes remain a team after the shared crisis ends?', 'What makes cooperation become an institution?'],
   initialCamera: { x: -3150, y: -420, scale: 0.48 },
@@ -527,5 +544,27 @@ export const case011: InvestigationCase = {
   initialCamera: { x: -6500, y: -1500, scale: 0.45 }
 }
 
-export const cases = [case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011]
+export const case012: InvestigationCase = {
+  id: 'case-012',
+  title: 'DID THE AVENGERS CREATE THEIR OWN WORST ENEMY?',
+  status: 'OPEN',
+  primaryNodeId: 'ultron',
+  relatedNodeIds: [
+    'ultron', 'avengers-54', 'avengers-57', 'vision', 'creator-guilt',
+    'jocasta-lead', 'alkhema-lead', 'annihilation-conquest-lead',
+    'hank-pym', 'avengers'
+  ],
+  keyRelationshipIds: [
+    'pym-ultron', 'ultron-avengers', 'ultron-vision', 'vision-avengers',
+    'pym-creator-guilt', 'creator-guilt-ultron', 'avengers54-ultron', 'avengers57-vision',
+    'ultron-jocasta', 'ultron-alkhema', 'ultron-annihilation'
+  ],
+  questions: [
+    'How much responsibility does a creator bear for the destruction caused by their creation?',
+    'Why is Ultron tied so deeply to the Avengers rather than existing as a standalone villain?'
+  ],
+  initialCamera: { x: -6200, y: -1300, scale: 0.55 }
+}
+
+export const cases = [case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, case012]
 export const evidence = nodes
