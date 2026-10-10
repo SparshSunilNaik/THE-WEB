@@ -492,7 +492,7 @@ export const case003: InvestigationCase = {
   relatedNodeIds: ['silver-surfer', 'uatu', 'alicia-masters', 'earth', 'ultimate-nullifier', 'fantastic-four', 'johnny-storm', 'ff-48', 'ff-49', 'ff-50', 'watchers', 'eternity', 'celestials', 'death', 'thanos', 'humanity'],
   keyRelationshipIds: ['silver-galactus-herald', 'galactus-earth-threat', 'uatu-earth-protective', 'alicia-silver-moral', 'silver-galactus-rebellion', 'uatu-johnny-intervention', 'johnny-nullifier', 'nullifier-galactus', 'four-galactus-first'],
   questions: ['What kind of entity is Galactus?', 'How does Earth survive a cosmic appetite?'],
-  initialCamera: { x: -2420, y: -480, scale: 0.52 },
+  initialCamera: { x: -1480, y: -50, scale: 0.52 },
 }
 
 export const case004: InvestigationCase = {
@@ -524,7 +524,7 @@ export const case007: InvestigationCase = {
   relatedNodeIds: ['doctor-strange', 'ancient-one', 'wong', 'baron-mordo', 'dormammu', 'sanctum-sanctorum', 'dark-dimension', 'magic', 'mystical-training', 'strange-tales-early', 'magic-rules-note', 'spider-strange-lead', 'doom-magic-lead', 'loki-magic-lead', 'scarlet-witch-magic-lead', 'mephisto-lead', 'nightmare-lead', 'shuma-gorath-lead', 'darkhold-lead', 'doctor-doom', 'loki', 'avengers', 'earth', 'peter-parker'],
   keyRelationshipIds: ['strange-tales-strange', 'ancient-one-strange-training', 'strange-magic', 'strange-mystical-training', 'strange-sanctum', 'mordo-strange-rivalry', 'dormammu-dark-dimension', 'strange-dormammu', 'strange-earth-defense', 'doom-magic-bridge', 'loki-magic-bridge', 'spider-strange-magic'],
   questions: ['What counts as magic in Marvel?', 'What are the rules, and who gets to break them?'],
-  initialCamera: { x: -5300, y: -230, scale: 0.45 },
+  initialCamera: { x: -4665, y: 0, scale: 0.45 },
 }
 
 export const case008: InvestigationCase = {
@@ -532,7 +532,7 @@ export const case008: InvestigationCase = {
   relatedNodeIds: ['thor', 'loki', 'asgard', 'odin', 'mjolnir', 'donald-blake', 'journey-mystery-83', 'godhood', 'asgardian-power', 'godhood-note', 'hercules-lead', 'olympians-lead', 'yggdrasil-lead', 'nine-realms-lead', 'surtur-lead', 'hel-lead', 'thor-galactus-comparison', 'avengers', 'magic', 'galactus'],
   keyRelationshipIds: ['thor-asgard-home', 'thor-odin-son', 'thor-mjolnir-wielder', 'odin-thor-father', 'odin-asgard-ruler', 'journey-thor-evidence', 'loki-thor-sibling', 'loki-asgard-home', 'asgard-godhood', 'godhood-asgardian-power', 'asgard-magic-boundary', 'thor-galactus-godhood', 'galactus-godhood-comparison'],
   questions: ['What does “god” mean in a universe that contains Galactus, Uatu, mutants, magic, and superhumans?', 'Is Asgardian power magic, biology, cosmic force, or some combination?'],
-  initialCamera: { x: -6900, y: -260, scale: 0.45 },
+  initialCamera: { x: -5610, y: 90, scale: 0.45 },
 }
 
 export const case009: InvestigationCase = {
@@ -548,7 +548,7 @@ export const case010: InvestigationCase = {
   relatedNodeIds: ['black-panther', 'wakanda', 'vibranium', 'wakandan-technology', 'klaw', 'fantastic-four-52', 'wakanda-sovereignty', 'atlantis-lead', 'namor-wakanda-lead', 'doom-wakanda-lead', 'shuri-lead', 'dora-milaje-lead', 'bast-lead', 'vibranium-origin-lead', 'fantastic-four', 'avengers', 'namor', 'doctor-doom'],
   keyRelationshipIds: ['ff52-black-panther', 'ff52-wakanda', 'black-panther-wakanda', 'wakanda-vibranium', 'wakanda-technology', 'klaw-vibranium', 'wakanda-sovereignty', 'black-panther-avengers-later', 'wakanda-namor-lead', 'wakanda-doom-lead'],
   questions: ['Why would an extraordinarily advanced nation stay hidden?', 'What does sovereignty protect, and what does it cost?'],
-  initialCamera: { x: -7900, y: -360, scale: 0.45 },
+  initialCamera: { x: -7185, y: -180, scale: 0.45 },
 }
 
 
@@ -571,7 +571,7 @@ export const case011: InvestigationCase = {
     'Why does Namor keep ending up in conflict with the surface world?',
     'How does a sovereign undersea nation view the land above it?'
   ],
-  initialCamera: { x: -6500, y: -1500, scale: 0.45 }
+  initialCamera: { x: -1850, y: -660, scale: 0.45 }
 }
 
 export const case012: InvestigationCase = {
@@ -593,7 +593,7 @@ export const case012: InvestigationCase = {
     'How much responsibility does a creator bear for the destruction caused by their creation?',
     'Why is Ultron tied so deeply to the Avengers rather than existing as a standalone villain?'
   ],
-  initialCamera: { x: -6200, y: -1300, scale: 0.55 }
+  initialCamera: { x: -3025, y: -410, scale: 0.55 }
 }
 
 export const case013: InvestigationCase = {

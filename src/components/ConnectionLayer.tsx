@@ -12,7 +12,7 @@ export function ConnectionLayer({ items, relationships, focusedId, selectedRelat
   const byId = new Map(items.map((item) => [item.id, item]))
   return (
     <>
-      <svg className="connections" width="2800" height="1450" viewBox="0 0 2800 1450" aria-label="Investigation relationships">
+      <svg className="connections" width="19500" height="4300" viewBox="0 0 19500 4300" aria-label="Investigation relationships">
         {relationships.map((relationship) => {
         const source = byId.get(relationship.sourceNodeId)
         const target = byId.get(relationship.targetNodeId)

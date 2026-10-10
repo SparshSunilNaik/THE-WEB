@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { case001, cases, nodes as initialNodes, relationships } from '../data/evidence'
 import { graph } from '../graph'
-import type { InvestigationCase, InvestigationNode } from '../types'
+import type { CameraState, InvestigationCase, InvestigationNode } from '../types'
 import { ConnectionLayer } from './ConnectionLayer'
 import { EvidenceCard } from './EvidenceCard'
 
@@ -20,12 +20,28 @@ function getHashState() {
   }
 }
 
+function getAdaptedCamera(initialCamera: CameraState, viewportWidth: number, viewportHeight: number): CameraState {
+  const boardCenterX = (1920 / 2 - initialCamera.x) / initialCamera.scale
+  const boardCenterY = (1080 / 2 - initialCamera.y) / initialCamera.scale
+  return {
+    scale: initialCamera.scale,
+    x: viewportWidth / 2 - boardCenterX * initialCamera.scale,
+    y: viewportHeight / 2 - boardCenterY * initialCamera.scale,
+  }
+}
+
 export function Board() {
   const [items, setItems] = useState(initialNodes)
   const [activeCaseId, setActiveCaseId] = useState<string>(() => getHashState().caseId)
   const [focusedId, setFocusedId] = useState<string | null>(() => getHashState().evidenceId)
   const [selectedRelationshipId, setSelectedRelationshipId] = useState<string | null>(null)
-  const [camera, setCamera] = useState(() => (CASES_BY_ID.get(getHashState().caseId) ?? case001).initialCamera)
+  const [camera, setCamera] = useState<CameraState>(() => {
+    const baseCam = (CASES_BY_ID.get(getHashState().caseId) ?? case001).initialCamera
+    if (typeof window !== 'undefined' && window.innerWidth && window.innerHeight) {
+      return getAdaptedCamera(baseCam, window.innerWidth, window.innerHeight)
+    }
+    return baseCam
+  })
   const [isDragging, setIsDragging] = useState(false)
   const dragRef = useRef<{ mode: 'pan' | 'item'; id?: string; startX: number; startY: number; originX: number; originY: number } | null>(null)
   const boardRef = useRef<HTMLDivElement>(null)
@@ -47,15 +63,17 @@ export function Board() {
     if (!bounds) return
     const centerX = node.position.x + node.position.width / 2
     const centerY = node.position.y + node.position.height / 2
-    setCamera((current) => ({ ...current, x: bounds.width / 2 - centerX * current.scale, y: bounds.height / 2 - centerY * current.scale }))
+    setCamera((current: CameraState) => ({ ...current, x: bounds.width / 2 - centerX * current.scale, y: bounds.height / 2 - centerY * current.scale }))
   }
 
   const switchCase = (caseId: string) => {
     const nextCase = CASES_BY_ID.get(caseId)
     if (!nextCase) return
     const focusNodeId = graph.getNode(nextCase.primaryNodeId)?.id ?? null
+    const bounds = boardRef.current?.getBoundingClientRect()
+    const nextCam = bounds ? getAdaptedCamera(nextCase.initialCamera, bounds.width, bounds.height) : nextCase.initialCamera
     setActiveCaseId(caseId)
-    setCamera(nextCase.initialCamera)
+    setCamera(nextCam)
     setSelectedRelationshipId(null)
     setFocusedId(focusNodeId)
     updateHash(focusNodeId, caseId)
@@ -83,7 +101,11 @@ export function Board() {
 
   const onPointerDown = (event: ReactPointerEvent<HTMLElement>, item?: InvestigationNode) => {
     if (event.button !== 0) return
-    event.currentTarget.setPointerCapture(event.pointerId)
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId)
+    } catch {
+      // Ignore pointer capture error in unsupported environments
+    }
     setIsDragging(true)
     if (item?.movable) {
       focusNode(item.id)
@@ -96,16 +118,26 @@ export function Board() {
     if (!drag) return
     const dx = event.clientX - drag.startX
     const dy = event.clientY - drag.startY
-    if (drag.mode === 'pan') setCamera((current) => ({ ...current, x: drag.originX + dx, y: drag.originY + dy }))
+    if (drag.mode === 'pan') setCamera((current: CameraState) => ({ ...current, x: drag.originX + dx, y: drag.originY + dy }))
     else if (drag.id) setItems((current) => current.map((item) => item.id === drag.id ? { ...item, position: { ...item.position, x: drag.originX + dx / camera.scale, y: drag.originY + dy / camera.scale } } : item))
   }
 
-  const onPointerUp = () => { dragRef.current = null; setIsDragging(false) }
+  const onPointerUp = (event?: ReactPointerEvent<HTMLElement>) => {
+    if (event) {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId)
+      } catch {
+        // Ignore
+      }
+    }
+    dragRef.current = null
+    setIsDragging(false)
+  }
 
   const onWheel = (event: React.WheelEvent<HTMLDivElement>) => {
     const bounds = boardRef.current?.getBoundingClientRect()
     if (!bounds) return
-    const nextScale = Math.min(1.25, Math.max(0.45, camera.scale * (event.deltaY > 0 ? 0.92 : 1.08)))
+    const nextScale = Math.min(1.25, Math.max(0.2, camera.scale * (event.deltaY > 0 ? 0.92 : 1.08)))
     const pointerX = event.clientX - bounds.left
     const pointerY = event.clientY - bounds.top
     const boardX = (pointerX - camera.x) / camera.scale
@@ -122,14 +154,29 @@ export function Board() {
     const onHashChange = () => {
       const { caseId, evidenceId } = getHashState()
       if (caseId && CASES_BY_ID.has(caseId)) {
+        const nextCase = CASES_BY_ID.get(caseId) ?? case001
         setActiveCaseId(caseId)
-        setCamera((CASES_BY_ID.get(caseId) ?? case001).initialCamera)
+        const bounds = boardRef.current?.getBoundingClientRect()
+        const nextCam = bounds ? getAdaptedCamera(nextCase.initialCamera, bounds.width, bounds.height) : nextCase.initialCamera
+        setCamera(nextCam)
       }
       setFocusedId(evidenceId)
+      if (evidenceId) {
+        const node = graph.getNode(evidenceId)
+        if (node) centerOnNode(node)
+      }
     }
     const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') clearInspection() }
     window.addEventListener('hashchange', onHashChange)
     window.addEventListener('keydown', escape)
+
+    // Center on initial evidence if specified in hash on mount
+    const initialEvidenceId = getHashState().evidenceId
+    if (initialEvidenceId) {
+      const initialNode = graph.getNode(initialEvidenceId)
+      if (initialNode) centerOnNode(initialNode)
+    }
+
     return () => { window.removeEventListener('hashchange', onHashChange); window.removeEventListener('keydown', escape) }
   }, [])
 
