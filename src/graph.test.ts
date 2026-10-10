@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, case012, case013, nodes, relationships } from './data/evidence'
+import { case001, case002, case003, case004, case005, case006, case007, case008, case009, case010, case011, case012, case013, cases, nodes, relationships } from './data/evidence'
 import { InvestigationGraph, graph } from './graph'
+import type { Continuity, InvestigationNode, NodeType, RelationshipVisualType, VisualVariant } from './types'
 
 describe('InvestigationGraph', () => {
+
   it('looks up nodes and relationships by stable ID', () => {
     expect(graph.getNode('peter-parker')?.title).toBe('PETER PARKER')
     expect(graph.getRelationship('peter-johnny')?.type).toBe('friendship')
@@ -290,3 +292,161 @@ describe('InvestigationGraph', () => {
     expect(compRelGalactus?.visualType).toBe('hypothesis')
   })
 })
+
+describe('Frontend Rendering and Evidence Wall Regressions', () => {
+  const BOARD_WIDTH = 19500
+  const BOARD_HEIGHT = 4300
+  const CASES_BY_ID = new Map(cases.map((c) => [c.id, c]))
+
+  it('verifies that all 200 nodes have unique IDs and finite coordinates within board bounds', () => {
+    expect(nodes.length).toBe(200)
+    const uniqueIds = new Set(nodes.map((n) => n.id))
+    expect(uniqueIds.size).toBe(200)
+
+    for (const node of nodes) {
+      expect(Number.isFinite(node.position.x)).toBe(true)
+      expect(Number.isFinite(node.position.y)).toBe(true)
+      expect(Number.isFinite(node.position.width)).toBe(true)
+      expect(Number.isFinite(node.position.height)).toBe(true)
+      expect(Number.isFinite(node.position.rotation)).toBe(true)
+
+      // Node bounding box must lie entirely within the physical board
+      expect(node.position.x).toBeGreaterThanOrEqual(0)
+      expect(node.position.y).toBeGreaterThanOrEqual(0)
+      expect(node.position.x + node.position.width).toBeLessThanOrEqual(BOARD_WIDTH)
+      expect(node.position.y + node.position.height).toBeLessThanOrEqual(BOARD_HEIGHT)
+    }
+  })
+
+  it('verifies that all nodes use supported visual variants and types', () => {
+    const validVariants: VisualVariant[] = ['dossier', 'issue', 'concept', 'question', 'note']
+    const validTypes: NodeType[] = ['character', 'comic_issue', 'event', 'concept', 'question', 'note', 'organization', 'location', 'object']
+    const validContinuities: Continuity[] = ['EARTH-616', 'MCU', 'EARTH-96283', 'EARTH-120703', 'MULTIVERSAL', 'META']
+
+    for (const node of nodes) {
+      expect(validVariants).toContain(node.visualVariant)
+      expect(validTypes).toContain(node.type)
+      if (node.continuity) {
+        expect(validContinuities).toContain(node.continuity)
+      }
+    }
+  })
+
+  it('verifies that all relationships have valid endpoints and supported visual types', () => {
+    expect(relationships.length).toBe(265)
+    const validVisualTypes: RelationshipVisualType[] = ['major', 'contextual', 'evidentiary', 'hypothesis']
+
+    for (const rel of relationships) {
+      expect(validVisualTypes).toContain(rel.visualType)
+      const source = graph.getNode(rel.sourceNodeId)
+      const target = graph.getNode(rel.targetNodeId)
+      expect(source, `Relationship ${rel.id} missing source node ${rel.sourceNodeId}`).toBeDefined()
+      expect(target, `Relationship ${rel.id} missing target node ${rel.targetNodeId}`).toBeDefined()
+
+      if (rel.evidenceNodeIds) {
+        for (const evId of rel.evidenceNodeIds) {
+          expect(graph.getNode(evId), `Relationship ${rel.id} references missing evidence ${evId}`).toBeDefined()
+        }
+      }
+
+      // Verify connection anchor points are finite
+      if (source && target) {
+        const sourceAnchorX = source.position.x + source.position.width / 2
+        const sourceAnchorY = source.position.y + source.position.height / 2
+        const targetAnchorX = target.position.x + target.position.width / 2
+        const targetAnchorY = target.position.y + target.position.height / 2
+        expect(Number.isFinite(sourceAnchorX)).toBe(true)
+        expect(Number.isFinite(sourceAnchorY)).toBe(true)
+        expect(Number.isFinite(targetAnchorX)).toBe(true)
+        expect(Number.isFinite(targetAnchorY)).toBe(true)
+      }
+    }
+  })
+
+  it('verifies that all 13 cases have calibrated initial cameras that frame their primary nodes', () => {
+    expect(cases.length).toBe(13)
+
+    for (const c of cases) {
+      expect(c.initialCamera).toBeDefined()
+      expect(c.initialCamera.scale).toBeGreaterThan(0)
+      expect(Number.isFinite(c.initialCamera.x)).toBe(true)
+      expect(Number.isFinite(c.initialCamera.y)).toBe(true)
+
+      // Board coordinates targeted at center of standard 1920x1080 screen:
+      // screenCenterX = 1920/2 = 960 => boardCenterX = (960 - camera.x) / camera.scale
+      // screenCenterY = 1080/2 = 540 => boardCenterY = (540 - camera.y) / camera.scale
+      const boardCenterX = (1920 / 2 - c.initialCamera.x) / c.initialCamera.scale
+      const boardCenterY = (1080 / 2 - c.initialCamera.y) / c.initialCamera.scale
+
+      // Must point strictly onto the board
+      expect(boardCenterX).toBeGreaterThanOrEqual(0)
+      expect(boardCenterX).toBeLessThanOrEqual(BOARD_WIDTH)
+      expect(boardCenterY).toBeGreaterThanOrEqual(0)
+      expect(boardCenterY).toBeLessThanOrEqual(BOARD_HEIGHT)
+
+      // Camera must frame the case's focal evidence cluster on the board (< 1500px from at least one related node)
+      const caseNodes = c.relatedNodeIds.map((id) => graph.getNode(id)).filter((n): n is InvestigationNode => n !== undefined)
+      expect(caseNodes.length).toBeGreaterThan(0)
+      const minDistanceToCluster = Math.min(
+        ...caseNodes.map((node) => {
+          const nodeCenterX = node.position.x + node.position.width / 2
+          const nodeCenterY = node.position.y + node.position.height / 2
+          return Math.hypot(boardCenterX - nodeCenterX, boardCenterY - nodeCenterY)
+        })
+      )
+      expect(minDistanceToCluster, `Case ${c.id} camera is too far from its evidence cluster: ${minDistanceToCluster}`).toBeLessThan(1500)
+    }
+  })
+
+  it('verifies deep-link hash state resolution behavior for valid and invalid inputs', () => {
+    function resolveHash(hash: string) {
+      const params = new URLSearchParams(hash.replace(/^#/, ''))
+      const evidenceId = params.get('evidence')
+      const caseId = params.get('case')
+      const node = evidenceId && graph.getNode(evidenceId) ? graph.getNode(evidenceId) : null
+      return {
+        caseId: caseId && CASES_BY_ID.has(caseId) ? caseId : node?.caseIds?.find((value) => CASES_BY_ID.has(value)) ?? case001.id,
+        evidenceId: node ? node.id : null,
+      }
+    }
+
+    // Default/empty
+    expect(resolveHash('')).toEqual({ caseId: 'case-001', evidenceId: null })
+
+    // Valid case
+    expect(resolveHash('#case=case-013')).toEqual({ caseId: 'case-013', evidenceId: null })
+
+    // Valid case and evidence
+    expect(resolveHash('#case=case-013&evidence=phoenix-force')).toEqual({
+      caseId: 'case-013',
+      evidenceId: 'phoenix-force',
+    })
+
+    // Unknown case falls back to default case-001
+    expect(resolveHash('#case=case-999')).toEqual({ caseId: 'case-001', evidenceId: null })
+
+    // Unknown evidence returns null
+    expect(resolveHash('#case=case-001&evidence=batman')).toEqual({ caseId: 'case-001', evidenceId: null })
+
+    // Known evidence without case resolves to evidence's parent case
+    expect(resolveHash('#evidence=dark-phoenix')).toEqual({ caseId: 'case-013', evidenceId: 'dark-phoenix' })
+
+    // Known evidence with invalid case resolves to evidence's parent case
+    expect(resolveHash('#case=non-existent&evidence=dark-phoenix')).toEqual({ caseId: 'case-013', evidenceId: 'dark-phoenix' })
+  })
+
+  it('verifies that all 13 cases have complete and valid graph membership', () => {
+    for (const c of cases) {
+      expect(c.title).toBeTruthy()
+      expect(c.questions.length).toBeGreaterThan(0)
+      expect(c.status).toMatch(/^(OPEN|CLOSED|ONGOING)$/)
+      expect(graph.getNode(c.primaryNodeId)).toBeDefined()
+      for (const relNodeId of c.relatedNodeIds) {
+        expect(graph.getNode(relNodeId), `Case ${c.id} related node ${relNodeId} not in graph`).toBeDefined()
+      }
+      for (const keyRelId of c.keyRelationshipIds) {
+        expect(graph.getRelationship(keyRelId), `Case ${c.id} relationship ${keyRelId} not in graph`).toBeDefined()
+      }
+    }
+  })
+})
