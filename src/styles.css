@@ -26,7 +26,7 @@ body { background: #20201d; }
 .connection.is-muted { opacity: .11; }
 .connection.is-active { opacity: 1; }
 .connection.is-active path { stroke-width: 5; }
-.evidence { position: absolute; z-index: 2; padding: 20px 18px 15px; color: #252522; overflow: visible; cursor: grab; user-select: none; transform: rotate(var(--rotation)); box-shadow: 4px 8px 12px rgba(0,0,0,.38); transition: filter .25s ease, opacity .25s ease, transform .18s ease; }
+.evidence { position: absolute; z-index: 2; padding: 20px 18px 15px; color: #252522; overflow: visible; content-visibility: auto; cursor: grab; user-select: none; transform: rotate(var(--rotation)); box-shadow: 4px 8px 12px rgba(0,0,0,.38); transition: filter .25s ease, opacity .25s ease, transform .18s ease; }
 .evidence:active { cursor: grabbing; }
 .evidence:hover, .evidence:focus-visible, .evidence.is-focused { z-index: 10; transform: rotate(0deg) translateY(-5px); outline: none; box-shadow: 7px 13px 20px rgba(0,0,0,.46); }
 .evidence.is-dimmed { opacity: .28; filter: saturate(.35); }
