@@ -1,16 +1,30 @@
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { adaptCamera, BOARD_HEIGHT, BOARD_WIDTH, cameraTransform, constrainCamera, normalizeWheelDelta, zoomCameraAt } from '../camera'
 import { case001, cases, nodes as initialNodes, relationships } from '../data/evidence'
 import { graph } from '../graph'
 import type { CameraState, InvestigationCase, InvestigationNode } from '../types'
 import { ConnectionLayer } from './ConnectionLayer'
 import { EvidenceCard } from './EvidenceCard'
 
-const BOARD_WIDTH = 19500
-const BOARD_HEIGHT = 4300
 const CASES_BY_ID = new Map(cases.map((caseItem) => [caseItem.id, caseItem]))
 
-function getHashState() {
-  const params = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+type DragState = {
+  mode: 'pan' | 'item'
+  pointerId: number
+  id?: string
+  startX: number
+  startY: number
+  originX: number
+  originY: number
+  scale: number
+  width?: number
+  height?: number
+}
+
+type PinchState = { distance: number; camera: CameraState; midX: number; midY: number }
+
+export function resolveHashState(hash: string) {
+  const params = new URLSearchParams(hash.replace(/^#/, ''))
   const evidenceId = params.get('evidence')
   const caseId = params.get('case')
   const node = evidenceId && graph.getNode(evidenceId) ? graph.getNode(evidenceId) : null
@@ -20,164 +34,287 @@ function getHashState() {
   }
 }
 
-function getAdaptedCamera(initialCamera: CameraState, viewportWidth: number, viewportHeight: number): CameraState {
-  const boardCenterX = (1920 / 2 - initialCamera.x) / initialCamera.scale
-  const boardCenterY = (1080 / 2 - initialCamera.y) / initialCamera.scale
-  return {
-    scale: initialCamera.scale,
-    x: viewportWidth / 2 - boardCenterX * initialCamera.scale,
-    y: viewportHeight / 2 - boardCenterY * initialCamera.scale,
-  }
+function initialHashState() {
+  return resolveHashState(typeof window === 'undefined' ? '' : window.location.hash)
+}
+
+function initialCameraFor(caseId: string) {
+  const base = (CASES_BY_ID.get(caseId) ?? case001).initialCamera
+  if (typeof window === 'undefined') return base
+  return adaptCamera(base, window.innerWidth, window.innerHeight)
 }
 
 export function Board() {
+  const hashState = useRef(initialHashState()).current
+  const startingCamera = useRef(initialCameraFor(hashState.caseId)).current
   const [items, setItems] = useState(initialNodes)
-  const [activeCaseId, setActiveCaseId] = useState<string>(() => getHashState().caseId)
-  const [focusedId, setFocusedId] = useState<string | null>(() => getHashState().evidenceId)
+  const [activeCaseId, setActiveCaseId] = useState(hashState.caseId)
+  const [focusedId, setFocusedId] = useState<string | null>(hashState.evidenceId)
   const [selectedRelationshipId, setSelectedRelationshipId] = useState<string | null>(null)
-  const [camera, setCamera] = useState<CameraState>(() => {
-    const baseCam = (CASES_BY_ID.get(getHashState().caseId) ?? case001).initialCamera
-    if (typeof window !== 'undefined' && window.innerWidth && window.innerHeight) {
-      return getAdaptedCamera(baseCam, window.innerWidth, window.innerHeight)
-    }
-    return baseCam
-  })
-  const [isDragging, setIsDragging] = useState(false)
-  const dragRef = useRef<{ mode: 'pan' | 'item'; id?: string; startX: number; startY: number; originX: number; originY: number } | null>(null)
   const boardRef = useRef<HTMLDivElement>(null)
+  const boardSpaceRef = useRef<HTMLDivElement>(null)
+  const itemsRef = useRef(items)
+  const activeCaseRef = useRef(activeCaseId)
+  const cameraRef = useRef(startingCamera)
+  const cameraFrameRef = useRef<number | null>(null)
+  const itemFrameRef = useRef<number | null>(null)
+  const interactionTimerRef = useRef<number | null>(null)
+  const animationTimerRef = useRef<number | null>(null)
+  const dragRef = useRef<DragState | null>(null)
+  const pinchRef = useRef<PinchState | null>(null)
+  const pointersRef = useRef(new Map<number, { x: number; y: number }>())
+  const pendingItemPositionRef = useRef<{ id: string; x: number; y: number } | null>(null)
+  const viewportRef = useRef({ left: 0, top: 0, width: typeof window === 'undefined' ? 1920 : window.innerWidth, height: typeof window === 'undefined' ? 1080 : window.innerHeight })
 
-  const updateHash = (evidenceId: string | null, caseId = activeCaseId) => {
-    const params = new URLSearchParams(window.location.hash.replace(/^#/, ''))
-    if (caseId && caseId !== case001.id) params.set('case', caseId)
-    else params.delete('case')
-    if (evidenceId) params.set('evidence', evidenceId)
-    else params.delete('evidence')
-    const nextHash = params.toString()
-    const url = new URL(window.location.href)
-    url.hash = nextHash ? `#${nextHash}` : ''
-    window.history.replaceState(null, '', url)
-  }
-
-  const centerOnNode = (node: InvestigationNode) => {
+  const refreshViewport = useCallback(() => {
     const bounds = boardRef.current?.getBoundingClientRect()
-    if (!bounds) return
+    if (bounds) viewportRef.current = { left: bounds.left, top: bounds.top, width: bounds.width, height: bounds.height }
+    return viewportRef.current
+  }, [])
+
+  const scheduleCamera = useCallback((requested: CameraState, animate = false) => {
+    const viewport = viewportRef.current
+    cameraRef.current = constrainCamera(requested, viewport.width, viewport.height)
+    const boardSpace = boardSpaceRef.current
+    if (animate && boardSpace) {
+      boardSpace.classList.add('is-animating')
+      if (animationTimerRef.current !== null) window.clearTimeout(animationTimerRef.current)
+      animationTimerRef.current = window.setTimeout(() => boardSpace.classList.remove('is-animating'), 700)
+    }
+    if (cameraFrameRef.current !== null) return
+    cameraFrameRef.current = window.requestAnimationFrame(() => {
+      cameraFrameRef.current = null
+      if (boardSpaceRef.current) boardSpaceRef.current.style.transform = cameraTransform(cameraRef.current)
+    })
+  }, [])
+
+  const markInteracting = useCallback(() => {
+    const boardSpace = boardSpaceRef.current
+    if (!boardSpace) return
+    boardSpace.classList.remove('is-animating')
+    boardSpace.classList.add('is-interacting')
+    if (interactionTimerRef.current !== null) window.clearTimeout(interactionTimerRef.current)
+    interactionTimerRef.current = window.setTimeout(() => boardSpace.classList.remove('is-interacting'), 140)
+  }, [])
+
+  const flushItemPosition = useCallback(() => {
+    const pending = pendingItemPositionRef.current
+    pendingItemPositionRef.current = null
+    itemFrameRef.current = null
+    if (!pending) return
+    setItems((current) => {
+      const next = current.map((item) => item.id === pending.id ? { ...item, position: { ...item.position, x: pending.x, y: pending.y } } : item)
+      itemsRef.current = next
+      return next
+    })
+  }, [])
+
+  const queueItemPosition = useCallback((id: string, x: number, y: number) => {
+    pendingItemPositionRef.current = { id, x, y }
+    if (itemFrameRef.current === null) itemFrameRef.current = window.requestAnimationFrame(flushItemPosition)
+  }, [flushItemPosition])
+
+  const navigateHash = useCallback((evidenceId: string | null, caseId: string) => {
+    const params = new URLSearchParams()
+    if (caseId !== case001.id) params.set('case', caseId)
+    if (evidenceId) params.set('evidence', evidenceId)
+    const url = new URL(window.location.href)
+    url.hash = params.toString()
+    if (url.href !== window.location.href) window.history.pushState(null, '', url)
+  }, [])
+
+  const centeredCamera = useCallback((node: InvestigationNode, baseCamera = cameraRef.current) => {
+    const viewport = viewportRef.current
     const centerX = node.position.x + node.position.width / 2
     const centerY = node.position.y + node.position.height / 2
-    setCamera((current: CameraState) => ({ ...current, x: bounds.width / 2 - centerX * current.scale, y: bounds.height / 2 - centerY * current.scale }))
-  }
+    return constrainCamera({ ...baseCamera, x: viewport.width / 2 - centerX * baseCamera.scale, y: viewport.height / 2 - centerY * baseCamera.scale }, viewport.width, viewport.height)
+  }, [])
 
-  const switchCase = (caseId: string) => {
+  const switchCase = useCallback((caseId: string) => {
     const nextCase = CASES_BY_ID.get(caseId)
     if (!nextCase) return
     const focusNodeId = graph.getNode(nextCase.primaryNodeId)?.id ?? null
-    const bounds = boardRef.current?.getBoundingClientRect()
-    const nextCam = bounds ? getAdaptedCamera(nextCase.initialCamera, bounds.width, bounds.height) : nextCase.initialCamera
+    const viewport = refreshViewport()
+    activeCaseRef.current = caseId
     setActiveCaseId(caseId)
-    setCamera(nextCam)
     setSelectedRelationshipId(null)
     setFocusedId(focusNodeId)
-    updateHash(focusNodeId, caseId)
-  }
+    scheduleCamera(adaptCamera(nextCase.initialCamera, viewport.width, viewport.height), true)
+    navigateHash(focusNodeId, caseId)
+  }, [navigateHash, refreshViewport, scheduleCamera])
 
-  const focusNode = (id: string) => {
-    const node = graph.getNode(id)
+  const focusNode = useCallback((id: string) => {
+    const node = itemsRef.current.find((item) => item.id === id) ?? graph.getNode(id)
     if (!node) return
-    const nextCaseId = node.caseIds?.find((caseId) => CASES_BY_ID.has(caseId)) ?? activeCaseId
-    if (nextCaseId !== activeCaseId) setActiveCaseId(nextCaseId)
-    const connected = focusedId !== null && graph.getNeighborNodes(focusedId).some((neighbor) => neighbor.id === id)
+    const currentCaseId = activeCaseRef.current
+    const nextCaseId = node.caseIds?.find((caseId) => CASES_BY_ID.has(caseId)) ?? currentCaseId
+    const connected = focusedId !== null && graph.getRelationshipsForNode(focusedId).some((relationship) => relationship.sourceNodeId === id || relationship.targetNodeId === id)
+    if (nextCaseId !== currentCaseId) {
+      activeCaseRef.current = nextCaseId
+      setActiveCaseId(nextCaseId)
+    }
     setFocusedId(id)
     setSelectedRelationshipId(null)
-    updateHash(id, nextCaseId)
-    if (connected) centerOnNode(items.find((item) => item.id === id) ?? node)
-  }
+    navigateHash(id, nextCaseId)
+    if (connected || nextCaseId !== currentCaseId) scheduleCamera(centeredCamera(node), true)
+  }, [centeredCamera, focusedId, navigateHash, scheduleCamera])
 
-  const clearInspection = () => {
+  const clearInspection = useCallback(() => {
     setFocusedId(null)
     setSelectedRelationshipId(null)
-    updateHash(null, activeCaseId)
-  }
+    navigateHash(null, activeCaseRef.current)
+  }, [navigateHash])
 
-  const returnToCase = () => switchCase(case001.id)
+  const onPointerDown = useCallback((event: ReactPointerEvent<HTMLElement>, item?: InvestigationNode) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return
+    try { boardRef.current?.setPointerCapture(event.pointerId) } catch { /* Unsupported pointer capture */ }
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY })
+    markInteracting()
+    boardSpaceRef.current?.classList.add('is-dragging')
 
-  const onPointerDown = (event: ReactPointerEvent<HTMLElement>, item?: InvestigationNode) => {
-    if (event.button !== 0) return
-    try {
-      event.currentTarget.setPointerCapture(event.pointerId)
-    } catch {
-      // Ignore pointer capture error in unsupported environments
+    if (pointersRef.current.size === 2) {
+      const [first, second] = [...pointersRef.current.values()]
+      const viewport = viewportRef.current
+      pinchRef.current = {
+        distance: Math.max(1, Math.hypot(first.x - second.x, first.y - second.y)),
+        camera: cameraRef.current,
+        midX: (first.x + second.x) / 2 - viewport.left,
+        midY: (first.y + second.y) / 2 - viewport.top,
+      }
+      dragRef.current = null
+      return
     }
-    setIsDragging(true)
+
     if (item?.movable) {
       focusNode(item.id)
-      dragRef.current = { mode: 'item', id: item.id, startX: event.clientX, startY: event.clientY, originX: item.position.x, originY: item.position.y }
-    } else dragRef.current = { mode: 'pan', startX: event.clientX, startY: event.clientY, originX: camera.x, originY: camera.y }
-  }
+      dragRef.current = { mode: 'item', pointerId: event.pointerId, id: item.id, startX: event.clientX, startY: event.clientY, originX: item.position.x, originY: item.position.y, scale: cameraRef.current.scale, width: item.position.width, height: item.position.height }
+    } else {
+      const camera = cameraRef.current
+      dragRef.current = { mode: 'pan', pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, originX: camera.x, originY: camera.y, scale: camera.scale }
+    }
+  }, [focusNode, markInteracting])
 
-  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+  const onPointerMove = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!pointersRef.current.has(event.pointerId)) return
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY })
+    markInteracting()
+
+    if (pointersRef.current.size === 2 && pinchRef.current) {
+      const [first, second] = [...pointersRef.current.values()]
+      const pinch = pinchRef.current
+      const viewport = viewportRef.current
+      const midX = (first.x + second.x) / 2 - viewport.left
+      const midY = (first.y + second.y) / 2 - viewport.top
+      const distance = Math.max(1, Math.hypot(first.x - second.x, first.y - second.y))
+      const zoomed = zoomCameraAt(pinch.camera, pinch.midX, pinch.midY, pinch.camera.scale * distance / pinch.distance)
+      scheduleCamera({ ...zoomed, x: zoomed.x + midX - pinch.midX, y: zoomed.y + midY - pinch.midY })
+      return
+    }
+
     const drag = dragRef.current
-    if (!drag) return
+    if (!drag || drag.pointerId !== event.pointerId) return
     const dx = event.clientX - drag.startX
     const dy = event.clientY - drag.startY
-    if (drag.mode === 'pan') setCamera((current: CameraState) => ({ ...current, x: drag.originX + dx, y: drag.originY + dy }))
-    else if (drag.id) setItems((current) => current.map((item) => item.id === drag.id ? { ...item, position: { ...item.position, x: drag.originX + dx / camera.scale, y: drag.originY + dy / camera.scale } } : item))
-  }
+    if (drag.mode === 'pan') {
+      scheduleCamera({ scale: drag.scale, x: drag.originX + dx, y: drag.originY + dy })
+    } else if (drag.id) {
+      const x = Math.min(BOARD_WIDTH - (drag.width ?? 0), Math.max(0, drag.originX + dx / drag.scale))
+      const y = Math.min(BOARD_HEIGHT - (drag.height ?? 0), Math.max(0, drag.originY + dy / drag.scale))
+      queueItemPosition(drag.id, x, y)
+    }
+  }, [markInteracting, queueItemPosition, scheduleCamera])
 
-  const onPointerUp = (event?: ReactPointerEvent<HTMLElement>) => {
-    if (event) {
-      try {
-        event.currentTarget.releasePointerCapture(event.pointerId)
-      } catch {
-        // Ignore
-      }
+  const onPointerUp = useCallback((event: ReactPointerEvent<HTMLElement>) => {
+    pointersRef.current.delete(event.pointerId)
+    try { boardRef.current?.releasePointerCapture(event.pointerId) } catch { /* Capture may already be released */ }
+    if (pendingItemPositionRef.current) {
+      if (itemFrameRef.current !== null) window.cancelAnimationFrame(itemFrameRef.current)
+      flushItemPosition()
+    }
+    if (pointersRef.current.size < 2) pinchRef.current = null
+    if (pointersRef.current.size === 1) {
+      const [remaining] = [...pointersRef.current.entries()]
+      const camera = cameraRef.current
+      dragRef.current = { mode: 'pan', pointerId: remaining[0], startX: remaining[1].x, startY: remaining[1].y, originX: camera.x, originY: camera.y, scale: camera.scale }
+      return
     }
     dragRef.current = null
-    setIsDragging(false)
-  }
+    boardSpaceRef.current?.classList.remove('is-dragging')
+  }, [flushItemPosition])
 
-  const onWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    const bounds = boardRef.current?.getBoundingClientRect()
-    if (!bounds) return
-    const nextScale = Math.min(1.25, Math.max(0.2, camera.scale * (event.deltaY > 0 ? 0.92 : 1.08)))
-    const pointerX = event.clientX - bounds.left
-    const pointerY = event.clientY - bounds.top
-    const boardX = (pointerX - camera.x) / camera.scale
-    const boardY = (pointerY - camera.y) / camera.scale
-    setCamera({ scale: nextScale, x: pointerX - boardX * nextScale, y: pointerY - boardY * nextScale })
-  }
-
-  const onBoardClick = (event: React.MouseEvent<HTMLElement>) => {
+  const onBoardClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     const target = event.target as HTMLElement
-    if (!target.closest('.evidence, .connection, .case-return, .relationship-slip, .case-tab')) clearInspection()
-  }
+    if (!target.closest('.evidence, .connection-hit-button, .case-return, .relationship-slip, .case-tab')) clearInspection()
+  }, [clearInspection])
 
   useEffect(() => {
-    const onHashChange = () => {
-      const { caseId, evidenceId } = getHashState()
-      if (caseId && CASES_BY_ID.has(caseId)) {
-        const nextCase = CASES_BY_ID.get(caseId) ?? case001
-        setActiveCaseId(caseId)
-        const bounds = boardRef.current?.getBoundingClientRect()
-        const nextCam = bounds ? getAdaptedCamera(nextCase.initialCamera, bounds.width, bounds.height) : nextCase.initialCamera
-        setCamera(nextCam)
-      }
+    const board = boardRef.current
+    if (!board) return
+    const initializeFrame = window.requestAnimationFrame(() => {
+      const viewport = refreshViewport()
+      const initialCase = CASES_BY_ID.get(hashState.caseId) ?? case001
+      const initialNode = hashState.evidenceId ? itemsRef.current.find((item) => item.id === hashState.evidenceId) : undefined
+      const mountedCamera = adaptCamera(initialCase.initialCamera, viewport.width, viewport.height)
+      scheduleCamera(initialNode ? centeredCamera(initialNode, mountedCamera) : mountedCamera)
+    })
+    const onWheel = (event: WheelEvent) => {
+      if (event.ctrlKey || event.metaKey) return
+      event.preventDefault()
+      const viewport = viewportRef.current
+      const pointerX = event.clientX - viewport.left
+      const pointerY = event.clientY - viewport.top
+      const delta = normalizeWheelDelta(event.deltaY, event.deltaMode, viewport.height)
+      if (delta === 0) return
+      markInteracting()
+      const camera = cameraRef.current
+      scheduleCamera(zoomCameraAt(camera, pointerX, pointerY, camera.scale * Math.exp(-delta * 0.0012)))
+    }
+    board.addEventListener('wheel', onWheel, { passive: false })
+    return () => {
+      window.cancelAnimationFrame(initializeFrame)
+      board.removeEventListener('wheel', onWheel)
+    }
+  }, [centeredCamera, hashState.caseId, hashState.evidenceId, markInteracting, refreshViewport, scheduleCamera])
+
+  useEffect(() => {
+    const applyLocation = () => {
+      const { caseId, evidenceId } = resolveHashState(window.location.hash)
+      const nextCase = CASES_BY_ID.get(caseId) ?? case001
+      const viewport = refreshViewport()
+      const baseCamera = adaptCamera(nextCase.initialCamera, viewport.width, viewport.height)
+      activeCaseRef.current = caseId
+      setActiveCaseId(caseId)
       setFocusedId(evidenceId)
-      if (evidenceId) {
-        const node = graph.getNode(evidenceId)
-        if (node) centerOnNode(node)
-      }
+      setSelectedRelationshipId(null)
+      const node = evidenceId ? itemsRef.current.find((item) => item.id === evidenceId) : undefined
+      scheduleCamera(node ? centeredCamera(node, baseCamera) : baseCamera, true)
     }
-    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') clearInspection() }
-    window.addEventListener('hashchange', onHashChange)
-    window.addEventListener('keydown', escape)
-
-    // Center on initial evidence if specified in hash on mount
-    const initialEvidenceId = getHashState().evidenceId
-    if (initialEvidenceId) {
-      const initialNode = graph.getNode(initialEvidenceId)
-      if (initialNode) centerOnNode(initialNode)
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') clearInspection() }
+    const onResize = () => {
+      refreshViewport()
+      scheduleCamera(cameraRef.current)
     }
+    window.addEventListener('popstate', applyLocation)
+    window.addEventListener('hashchange', applyLocation)
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('popstate', applyLocation)
+      window.removeEventListener('hashchange', applyLocation)
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [centeredCamera, clearInspection, refreshViewport, scheduleCamera])
 
-    return () => { window.removeEventListener('hashchange', onHashChange); window.removeEventListener('keydown', escape) }
+  useEffect(() => () => {
+    if (cameraFrameRef.current !== null) window.cancelAnimationFrame(cameraFrameRef.current)
+    if (itemFrameRef.current !== null) window.cancelAnimationFrame(itemFrameRef.current)
+    if (interactionTimerRef.current !== null) window.clearTimeout(interactionTimerRef.current)
+    if (animationTimerRef.current !== null) window.clearTimeout(animationTimerRef.current)
+    cameraFrameRef.current = null
+    itemFrameRef.current = null
+    interactionTimerRef.current = null
+    animationTimerRef.current = null
   }, [])
 
   const caseInfo = (CASES_BY_ID.get(activeCaseId) ?? case001) as InvestigationCase
@@ -186,11 +323,10 @@ export function Board() {
   const selectedTarget = selectedRelationship ? items.find((item) => item.id === selectedRelationship.targetNodeId) : undefined
   const selectedEvidence = selectedRelationship ? graph.getEvidenceSupportingRelationship(selectedRelationship.id) : []
   const slipStyle = selectedSource && selectedTarget ? { left: (selectedSource.position.x + selectedTarget.position.x) / 2, top: (selectedSource.position.y + selectedTarget.position.y) / 2 } : undefined
-  const connectedIds = focusedId ? new Set(graph.getNeighborNodes(focusedId).map((node) => node.id)) : new Set<string>()
-  const transform = `translate(${camera.x}px, ${camera.y}px) scale(${camera.scale})`
+  const connectedIds = useMemo(() => focusedId ? new Set(graph.getNeighborNodes(focusedId).map((node) => node.id)) : new Set<string>(), [focusedId])
 
   return (
-    <main className="wall-shell" ref={boardRef} onPointerDown={(event) => onPointerDown(event)} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onWheel={onWheel} onClick={onBoardClick}>
+    <main className="wall-shell" ref={boardRef} onPointerDown={(event) => onPointerDown(event)} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onClick={onBoardClick}>
       <div className="wall-toolbar" aria-label="Investigation details">
         <span className="stamp">THE WEB<br /><b>MARVEL INVESTIGATION // S. NAIK</b><br /><b>STATUS: ONGOING</b></span>
       </div>
@@ -202,8 +338,8 @@ export function Board() {
           ))}
         </div>
       </div>
-      <button className="case-return" type="button" title={`Return to the initial ${case001.title} viewpoint`} onPointerDown={(event) => event.stopPropagation()} onClick={returnToCase}>PIN // RETURN TO CASE 001</button>
-      <div className={`board-space ${isDragging ? 'is-dragging' : ''}`} style={{ transform }}>
+      <button className="case-return" type="button" title={`Return to the initial ${case001.title} viewpoint`} onPointerDown={(event) => event.stopPropagation()} onClick={() => switchCase(case001.id)}>PIN // RETURN TO CASE 001</button>
+      <div className="board-space" ref={boardSpaceRef} style={{ transform: cameraTransform(startingCamera) }}>
         <div className="board-surface" style={{ width: BOARD_WIDTH, height: BOARD_HEIGHT }}>
           <ConnectionLayer items={items} relationships={relationships} focusedId={focusedId} selectedRelationshipId={selectedRelationshipId} onSelectRelationship={setSelectedRelationshipId} />
           {items.map((item) => <EvidenceCard key={item.id} item={item} focused={focusedId === item.id} dimmed={focusedId !== null && focusedId !== item.id && !connectedIds.has(item.id)} onFocus={focusNode} onPointerDown={onPointerDown} />)}
