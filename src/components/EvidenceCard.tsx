@@ -1,4 +1,4 @@
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react'
+import { memo, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
 import type { InvestigationNode } from '../types'
 
 interface EvidenceCardProps {
@@ -9,7 +9,7 @@ interface EvidenceCardProps {
   onPointerDown: (event: ReactPointerEvent<HTMLElement>, item: InvestigationNode) => void
 }
 
-export function EvidenceCard({ item, focused, dimmed, onFocus, onPointerDown }: EvidenceCardProps) {
+export const EvidenceCard = memo(function EvidenceCard({ item, focused, dimmed, onFocus, onPointerDown }: EvidenceCardProps) {
   const style = { '--rotation': `${item.position.rotation}deg`, width: item.position.width, height: item.position.height, left: item.position.x, top: item.position.y } as CSSProperties
 
   return (
@@ -26,4 +26,4 @@ export function EvidenceCard({ item, focused, dimmed, onFocus, onPointerDown }: 
       </div>
     </div>
   )
-}
+})

@@ -4,16 +4,16 @@
 * { box-sizing: border-box; }
 html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; }
 body { background: #20201d; }
-.wall-shell { position: relative; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; cursor: grab; background-color: #252522; background-image: radial-gradient(rgba(255,255,255,.04) .7px, transparent .7px), linear-gradient(105deg, rgba(0,0,0,.18), transparent 40%, rgba(0,0,0,.2)); background-size: 8px 8px, 100% 100%; }
+.wall-shell { position: relative; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; touch-action: none; cursor: grab; background-color: #252522; background-image: radial-gradient(rgba(255,255,255,.04) .7px, transparent .7px), linear-gradient(105deg, rgba(0,0,0,.18), transparent 40%, rgba(0,0,0,.2)); background-size: 8px 8px, 100% 100%; }
 .wall-shell:active { cursor: grabbing; }
-.board-space { position: absolute; inset: 0; transform-origin: 0 0; transition: transform .65s cubic-bezier(.22,.75,.25,1); }
-.board-space.is-dragging { transition: none; }
+.board-space { position: absolute; inset: 0; transform-origin: 0 0; }
+.board-space.is-animating { transition: transform .65s cubic-bezier(.22,.75,.25,1); }
 .board-surface { position: relative; }
 .connections { position: absolute; inset: 0; z-index: 1; overflow: visible; pointer-events: none; }
-.connection { cursor: pointer; outline: none; pointer-events: auto; }
+.connection { outline: none; pointer-events: none; }
 .connection path { fill: none; stroke-width: 3; opacity: .8; filter: drop-shadow(1px 2px 1px rgba(0,0,0,.5)); }
-.connection-hit { stroke: rgba(0,0,0,.001); stroke-width: 24; opacity: 0; filter: none; pointer-events: stroke; }
-.connection:focus-visible path:not(.connection-hit), .connection.is-selected path:not(.connection-hit) { stroke-width: 5; }
+.board-space.is-interacting .connection path, .board-space.is-dragging .connection path { filter: none; }
+.connection.is-selected path { stroke-width: 5; }
 .connection-hit-button { position: absolute; z-index: 2; width: 100px; height: 34px; padding: 0; border: 0; background: transparent; transform: translate(-50%, -50%); cursor: pointer; }
 .connection-hit-button:focus-visible { outline: 1px dashed #d8c27e; background: rgba(216,194,126,.12); }
 .connection-hit-button.is-muted { opacity: .22; }
@@ -30,6 +30,7 @@ body { background: #20201d; }
 .evidence:active { cursor: grabbing; }
 .evidence:hover, .evidence:focus-visible, .evidence.is-focused { z-index: 10; transform: rotate(0deg) translateY(-5px); outline: none; box-shadow: 7px 13px 20px rgba(0,0,0,.46); }
 .evidence.is-dimmed { opacity: .28; filter: saturate(.35); }
+.board-space.is-interacting .evidence.is-dimmed, .board-space.is-dragging .evidence.is-dimmed { filter: none; }
 .tone--paper { background: #d4cbb8; }.tone--cream { background: #e8dfc9; }.tone--blue { background: #aeb8b7; }.tone--red { background: #c1a7a0; }.tone--yellow { background: #d8c27e; }
 .evidence::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .18; background: repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(80,60,40,.14) 5px); mix-blend-mode: multiply; }
 .evidence-pin { position: absolute; z-index: 2; top: -7px; left: 50%; width: 13px; height: 13px; border-radius: 50%; transform: translateX(-50%); background: #a33e32; box-shadow: 1px 2px 3px #333; }
